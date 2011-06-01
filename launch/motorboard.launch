@@ -1,0 +1,43 @@
+<launch>
+  <node pkg="albatros_motorboard" type="motorboard_node" name="motorboard_node" output="screen">
+
+    <param name="serial_port" value="/dev/ttyS0" type="string" />
+
+    <param name="rate" value="10.0" type="double" />
+
+    <param name="pressure_offset" value="0" type="int" />
+    <param name="waterin_offset" value="0" type="int" />
+
+    <param name="forward_left_PID_Kd" value="0.0" type="double" />
+    <param name="forward_left_PID_Ki" value="0.1" type="double" />
+    <param name="forward_left_PID_Kp" value="0.5" type="double" />
+    <param name="forward_left_PID_on" value="true" type="bool" />
+    <param name="forward_left_accel" value="5" type="int" />
+    <param name="forward_left_invert" value="false" type="bool" />
+
+    <param name="forward_right_PID_Kd" value="0.0" type="double" />
+    <param name="forward_right_PID_Ki" value="0.1" type="double" />
+    <param name="forward_right_PID_Kp" value="0.5" type="double" />
+    <param name="forward_right_PID_on" value="true" type="bool" />
+    <param name="forward_right_accel" value="5" type="int" />
+    <param name="forward_right_invert" value="true" type="bool" />
+
+    <param name="downward_left_PID_Kd" value="0.0" type="double" />
+    <param name="downward_left_PID_Ki" value="0.1" type="double" />
+    <param name="downward_left_PID_Kp" value="0.5" type="double" />
+    <param name="downward_left_PID_on" value="true" type="bool" />
+    <param name="downward_left_accel" value="5" type="int" />
+    <param name="downward_left_invert" value="false" type="bool" />
+
+    <param name="downward_right_PID_Kd" value="0.0" type="double" />
+    <param name="downward_right_PID_Ki" value="0.1" type="double" />
+    <param name="downward_right_PID_Kp" value="0.5" type="double" />
+    <param name="downward_right_PID_on" value="true" type="bool" />
+    <param name="downward_right_accel" value="5" type="int" />
+    <param name="downward_right_invert" value="true" type="bool" />
+
+  </node>
+  
+  <node pkg="dynamic_reconfigure" type="reconfigure_gui" output="screen" />
+
+</launch>
