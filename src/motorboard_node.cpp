@@ -9,7 +9,7 @@
  *
  * @par Advertises
  *
- * - @b speeds_rpm topic (albatros_motorboard/MotorSpeedsStamped)
+ * - @b speeds_rpm topic (control_common/MotorLevelsStamped)
  *   current motor speeds in rpm
  *
  * - @b status topic (albatros_motorboard/MotorStatusStamped)
@@ -38,7 +38,7 @@
 
 #include <ros/ros.h>
 #include <dynamic_reconfigure/server.h>
-#include "albatros_motorboard/MotorSpeedsStamped.h"
+#include "control_common/MotorLevelsStamped.h"
 #include "albatros_motorboard/MotorStatusStamped.h"
 #include "albatros_motorboard/PressureStamped.h"
 #include "albatros_motorboard/MotorBoardDynParamsConfig.h"
@@ -389,18 +389,18 @@ private:
   }
 
   void fillMotorSpeedsMsg(const albatros_motorboard::MotorBoardCtrl::MotorSpeeds& s,
-                          albatros_motorboard::MotorSpeedsStamped* m )
+                          control_common::MotorLevelsStamped* m )
   {
-    m->speeds[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
+    m->levels[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
                                                  ? -s[mbctrl_.FORWARD_LEFT]
                                                  : +s[mbctrl_.FORWARD_LEFT];
-    m->speeds[mbctrl_.FORWARD_RIGHT]  = (current_params_.forward_right_invert)
+    m->levels[mbctrl_.FORWARD_RIGHT]  = (current_params_.forward_right_invert)
                                                  ? -s[mbctrl_.FORWARD_RIGHT]
                                                  : +s[mbctrl_.FORWARD_RIGHT];
-    m->speeds[mbctrl_.DOWNWARD_LEFT]  = (current_params_.downward_left_invert)
+    m->levels[mbctrl_.DOWNWARD_LEFT]  = (current_params_.downward_left_invert)
                                                  ? -s[mbctrl_.DOWNWARD_LEFT]
                                                  : +s[mbctrl_.DOWNWARD_LEFT];
-    m->speeds[mbctrl_.DOWNWARD_RIGHT] = (current_params_.downward_right_invert)
+    m->levels[mbctrl_.DOWNWARD_RIGHT] = (current_params_.downward_right_invert)
                                                  ? -s[mbctrl_.DOWNWARD_RIGHT]
                                                  : +s[mbctrl_.DOWNWARD_RIGHT];
   }
@@ -412,7 +412,7 @@ private:
       ros::Time stamp = ros::Time::now();
       albatros_motorboard::MotorBoardCtrl::MotorSpeeds speeds_rpm;
       mbctrl_.getSpeeds(&speeds_rpm);
-      albatros_motorboard::MotorSpeedsStamped msg;
+      control_common::MotorLevelsStamped msg;
       msg.header.stamp = stamp;
       fillMotorSpeedsMsg(speeds_rpm, &msg);
       publ_speeds_.publish(msg);
@@ -453,29 +453,36 @@ private:
        publishStatus();
   }
 
-  void fillMotorSpeeds(const albatros_motorboard::MotorSpeedsStamped& m,
+  void fillMotorSpeeds(const control_common::MotorLevelsStamped& m,
                        albatros_motorboard::MotorBoardCtrl::MotorSpeeds* s)
   {
     (*s)[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
-                                     ? -m.speeds[mbctrl_.FORWARD_LEFT]
-                                     : +m.speeds[mbctrl_.FORWARD_LEFT];
+                                     ? -m.levels[mbctrl_.FORWARD_LEFT]
+                                     : +m.levels[mbctrl_.FORWARD_LEFT];
     (*s)[mbctrl_.FORWARD_RIGHT]  = (current_params_.forward_right_invert)
-                                     ? -m.speeds[mbctrl_.FORWARD_RIGHT]
-                                     : +m.speeds[mbctrl_.FORWARD_RIGHT];
+                                     ? -m.levels[mbctrl_.FORWARD_RIGHT]
+                                     : +m.levels[mbctrl_.FORWARD_RIGHT];
     (*s)[mbctrl_.DOWNWARD_LEFT]  = (current_params_.downward_left_invert)
-                                     ? -m.speeds[mbctrl_.DOWNWARD_LEFT]
-                                     : +m.speeds[mbctrl_.DOWNWARD_LEFT];
+                                     ? -m.levels[mbctrl_.DOWNWARD_LEFT]
+                                     : +m.levels[mbctrl_.DOWNWARD_LEFT];
     (*s)[mbctrl_.DOWNWARD_RIGHT] = (current_params_.downward_right_invert)
-                                     ? -m.speeds[mbctrl_.DOWNWARD_RIGHT]
-                                     : +m.speeds[mbctrl_.DOWNWARD_RIGHT];
+                                     ? -m.levels[mbctrl_.DOWNWARD_RIGHT]
+                                     : +m.levels[mbctrl_.DOWNWARD_RIGHT];
   }
 
-  void updateSpeedsCallback(const albatros_motorboard::MotorSpeedsStamped& msg)
+  void updateSpeedsCallback(const control_common::MotorLevelsStamped& msg)
   {
+    const int num_motors = msg.levels.size();
+    if ( num_motors != mbctrl_.NUM_MOTORS )
+    {
+      ROS_ERROR_STREAM("Wrong number of motors (" << num_motors
+                       << ") in update speed request, ignoring request.");
+      return;
+    }
+    albatros_motorboard::MotorBoardCtrl::MotorSpeeds speeds_pc;
+    fillMotorSpeeds(msg, &speeds_pc);
     try
     {
-      albatros_motorboard::MotorBoardCtrl::MotorSpeeds speeds_pc;
-      fillMotorSpeeds(msg, &speeds_pc);
       mbctrl_.setSpeeds(speeds_pc);
     }
     catch (const std::exception& e)
@@ -536,7 +543,7 @@ public:
         boost::bind(&MotorBoardNode::speedsSubscribedCallback,this,_1);
     ros::SubscriberStatusCallback speeds_unsubs_cb =
         boost::bind(&MotorBoardNode::speedsUnsubscribedCallback,this,_1);
-    publ_speeds_ = node_.advertise<albatros_motorboard::MotorSpeedsStamped>("speeds_rpm",1,
+    publ_speeds_ = node_.advertise<control_common::MotorLevelsStamped>("speeds_rpm",1,
                                                                             speeds_subs_cb,
                                                                             speeds_unsubs_cb);
     ros::SubscriberStatusCallback status_subs_cb =
