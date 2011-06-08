@@ -117,11 +117,11 @@ private:
   //@}
 };
 
-} // namespace motorboard
+std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::Motor& m);
+std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::Sensor& s);
+std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::PIDConstant& k);
 
-std::ostream& operator<<(std::ostream& ostr, const albatros_motorboard::MotorBoardCtrl::Motor& m);
-std::ostream& operator<<(std::ostream& ostr, const albatros_motorboard::MotorBoardCtrl::Sensor& s);
-std::ostream& operator<<(std::ostream& ostr, const albatros_motorboard::MotorBoardCtrl::PIDConstant& k);
+} // namespace motorboard
 
 #endif
 

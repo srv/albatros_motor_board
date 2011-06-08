@@ -471,8 +471,8 @@ void albatros_motorboard::MotorBoardCtrl::getSensorValue(const Sensor sensor_id,
  * @param m motor identifier
  * @return reference to the output stream
  */
-std::ostream& operator<<(std::ostream& ostr,
-                         const albatros_motorboard::MotorBoardCtrl::Motor& m)
+std::ostream& albatros_motorboard::operator<<(std::ostream& ostr,
+                                              const MotorBoardCtrl::Motor& m)
 {
   return ostr << int(m);
 }
@@ -483,8 +483,8 @@ std::ostream& operator<<(std::ostream& ostr,
  * @param s sensor identifier
  * @return reference to the output stream
  */
-std::ostream& operator<<(std::ostream& ostr,
-                         const albatros_motorboard::MotorBoardCtrl::Sensor& s)
+std::ostream& albatros_motorboard::operator<<(std::ostream& ostr,
+                                              const MotorBoardCtrl::Sensor& s)
 {
   return ostr << int(s);
 }
@@ -495,8 +495,8 @@ std::ostream& operator<<(std::ostream& ostr,
  * @param k PID constant indetifier
  * @return reference to the output stream
  */
-std::ostream& operator<<(std::ostream& ostr,
-                         const albatros_motorboard::MotorBoardCtrl::PIDConstant& k)
+std::ostream& albatros_motorboard::operator<<(std::ostream& ostr,
+                                              const MotorBoardCtrl::PIDConstant& k)
 {
   return ostr << int(k);
 }
