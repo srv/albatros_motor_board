@@ -20,7 +20,7 @@
   <depend package="std_msgs"/>
   <depend package="driver_base"/>
   <depend package="dynamic_reconfigure" />
-  <depend package="control_common" />
+  <depend package="srv_msgs" />
 
 </package>
 

@@ -9,18 +9,18 @@
  *
  * @par Advertises
  *
- * - @b speeds_rpm topic (control_common/MotorLevelsStamped)
+ * - @b speeds_rpm topic (srv_msgs/MotorLevels)
  *   current motor speeds in rpm
  *
- * - @b status topic (albatros_motorboard/MotorStatusStamped)
+ * - @b status topic (albatros_motorboard/MotorStatus)
  *   motor error counts
  *
- * - @b pressure topic (albatros_motorboard/PressureStamped)
+ * - @b pressure topic (srv_msgs/Pressure)
  *   pressure sensor sample
  *
  * @par Subscribes
  *
- * - @b speeds_pc (albatros_motorboard/MotorSpeeds)
+ * - @b speeds_pc (srv_msgs/MotorLevels)
  *   desired speeds in percentage of device nominal speed
  *
  * @par Parameters
@@ -38,9 +38,9 @@
 
 #include <ros/ros.h>
 #include <dynamic_reconfigure/server.h>
-#include "control_common/MotorLevelsStamped.h"
-#include "albatros_motorboard/MotorStatusStamped.h"
-#include "albatros_motorboard/PressureStamped.h"
+#include <srv_msgs/Pressure.h>
+#include <srv_msgs/MotorLevels.h>
+#include "albatros_motorboard/MotorStatus.h"
 #include "albatros_motorboard/MotorBoardDynParamsConfig.h"
 #include "albatros_motorboard/motorboardctrl.h"
 
@@ -196,7 +196,7 @@ private:
         res += updateParam(&(current_params_.pressure_offset),params.pressure_offset);
         break;
       case albatros_motorboard::MotorBoardCtrl::WATERIN :
-        res += updateParam(&(current_params_.pressure_offset),params.pressure_offset);
+        res += updateParam(&(current_params_.waterin_offset),params.waterin_offset);
         break;
     }
     return res;
@@ -377,9 +377,9 @@ private:
       ros::Time stamp = ros::Time::now();
       int value;
       mbctrl_.getSensorValue(mbctrl_.PRESSURE, &value);
-      albatros_motorboard::PressureStamped msg;
+      srv_msgs::Pressure msg;
       msg.header.stamp = stamp;
-      msg.pressure = value;
+      msg.pressure = double(value);
       publ_pressure_.publish(msg);
     }
     catch (std::exception &e)
@@ -389,7 +389,7 @@ private:
   }
 
   void fillMotorSpeedsMsg(const albatros_motorboard::MotorBoardCtrl::MotorSpeeds& s,
-                          control_common::MotorLevelsStamped* m )
+                          srv_msgs::MotorLevels* m )
   {
     m->levels[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
                                                  ? -s[mbctrl_.FORWARD_LEFT]
@@ -412,7 +412,7 @@ private:
       ros::Time stamp = ros::Time::now();
       albatros_motorboard::MotorBoardCtrl::MotorSpeeds speeds_rpm;
       mbctrl_.getSpeeds(&speeds_rpm);
-      control_common::MotorLevelsStamped msg;
+      srv_msgs::MotorLevels msg;
       msg.header.stamp = stamp;
       fillMotorSpeedsMsg(speeds_rpm, &msg);
       publ_speeds_.publish(msg);
@@ -430,7 +430,7 @@ private:
       ros::Time stamp = ros::Time::now();
       albatros_motorboard::MotorBoardCtrl::MotorStatus status;
       mbctrl_.getStatus(&status);
-      albatros_motorboard::MotorStatusStamped msg;
+      albatros_motorboard::MotorStatus msg;
       msg.header.stamp = stamp;
       for (int i=0; i<mbctrl_.NUM_MOTORS; i++)
         msg.status[i] = status[i];
@@ -453,7 +453,7 @@ private:
        publishStatus();
   }
 
-  void fillMotorSpeeds(const control_common::MotorLevelsStamped& m,
+  void fillMotorSpeeds(const srv_msgs::MotorLevels& m,
                        albatros_motorboard::MotorBoardCtrl::MotorSpeeds* s)
   {
     (*s)[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
@@ -470,7 +470,7 @@ private:
                                      : +m.levels[mbctrl_.DOWNWARD_RIGHT];
   }
 
-  void updateSpeedsCallback(const control_common::MotorLevelsStamped& msg)
+  void updateSpeedsCallback(const srv_msgs::MotorLevels& msg)
   {
     const int num_motors = msg.levels.size();
     if ( num_motors != mbctrl_.NUM_MOTORS )
@@ -543,16 +543,16 @@ public:
         boost::bind(&MotorBoardNode::speedsSubscribedCallback,this,_1);
     ros::SubscriberStatusCallback speeds_unsubs_cb =
         boost::bind(&MotorBoardNode::speedsUnsubscribedCallback,this,_1);
-    publ_speeds_ = node_.advertise<control_common::MotorLevelsStamped>("speeds_rpm",1,
-                                                                            speeds_subs_cb,
-                                                                            speeds_unsubs_cb);
+    publ_speeds_ = node_.advertise<srv_msgs::MotorLevels>("speeds_rpm",1,
+                                                          speeds_subs_cb,
+                                                          speeds_unsubs_cb);
     ros::SubscriberStatusCallback status_subs_cb =
         boost::bind(&MotorBoardNode::statusSubscribedCallback,this,_1);
     ros::SubscriberStatusCallback status_unsubs_cb =
         boost::bind(&MotorBoardNode::statusUnsubscribedCallback,this,_1);
-    publ_status_ = node_.advertise<albatros_motorboard::MotorStatusStamped>("status",1,
-                                                                            status_subs_cb,
-                                                                            status_unsubs_cb);
+    publ_status_ = node_.advertise<albatros_motorboard::MotorStatus>("status",1,
+                                                                     status_subs_cb,
+                                                                     status_unsubs_cb);
   }
 
   void advertiseSensorTopics()
@@ -561,9 +561,9 @@ public:
         boost::bind(&MotorBoardNode::pressureSubscribedCallback,this,_1);
     ros::SubscriberStatusCallback pressure_unsubs_cb =
         boost::bind(&MotorBoardNode::pressureUnsubscribedCallback,this,_1);
-    publ_pressure_ = node_.advertise<albatros_motorboard::PressureStamped>("pressure",1,
-                                                                            pressure_subs_cb,
-                                                                            pressure_unsubs_cb);
+    publ_pressure_ = node_.advertise<srv_msgs::Pressure>("pressure",1,
+                                                         pressure_subs_cb,
+                                                         pressure_unsubs_cb);
   }
 
   void initDynParamsSrv()
