@@ -33,6 +33,10 @@ gencfg()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
+
 add_subdirectory(src/motorboardctrl)
-rosbuild_add_executable(motorboard_node src/motorboard_node.cpp)
+
+rosbuild_add_executable(motorboard_node 
+                          src/motorboard_node.cpp
+                          src/motorboard_node_base.cpp)
 target_link_libraries(motorboard_node motorboardctrl)
