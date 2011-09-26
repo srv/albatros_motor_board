@@ -37,6 +37,11 @@ gencfg()
 add_subdirectory(src/motorboardctrl)
 
 rosbuild_add_executable(motorboard_node 
-                          src/motorboard_node.cpp
-                          src/motorboard_node_base.cpp)
+                         src/motorboard_node.cpp
+                         src/motorboard_node_base.cpp)
+target_link_libraries(motorboard_node motorboardctrl)
+
+rosbuild_add_library(motorboard_nodelet
+                      src/motorboard_nodelet.cpp
+                      src/motorboard_node_base.cpp)
 target_link_libraries(motorboard_node motorboardctrl)
