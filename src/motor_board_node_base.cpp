@@ -1,5 +1,5 @@
-/** @file
- *
+/**
+ * @file
  * @brief ROS driver base class for Albatros motor board (implementation).
  *
  * This is a ROS driver for a motor board provided by Albatros.
@@ -10,18 +10,18 @@
  * @par Advertises
  *
  * - @b speeds_rpm topic (srv_msgs/MotorLevels)
- *   current motor speeds in rpm
+ *   current motor speeds in rpm.
  *
- * - @b status topic (albatros_motorboard/MotorStatus)
- *   motor error counts
+ * - @b status topic (albatros_motor_board/MotorStatus)
+ *   motor error counts.
  *
  * - @b pressure topic (srv_msgs/Pressure)
- *   pressure sensor sample
+ *   pressure sensor sample.
  *
  * @par Subscribes
  *
  * - @b speeds_pc (srv_msgs/MotorLevels)
- *   desired speeds in percentage of device nominal speed
+ *   desired speeds in percentage of device nominal speed.
  *
  * @par Parameters
  *
@@ -36,9 +36,9 @@
  */
 
 
-#include "motorboard_node_base.h"
+#include "motor_board_node_base.h"
 
-albatros_motorboard::MotorBoardNodeBase::MotorBoardNodeBase(const ros::NodeHandle& node,
+albatros_motor_board::MotorBoardNodeBase::MotorBoardNodeBase(const ros::NodeHandle& node,
                                                             const ros::NodeHandle& priv)
 : node_(node)
 , priv_(priv)
@@ -47,7 +47,7 @@ albatros_motorboard::MotorBoardNodeBase::MotorBoardNodeBase(const ros::NodeHandl
 , num_pressure_subscribers_(0)
 {}
 
-void albatros_motorboard::MotorBoardNodeBase::advertiseMotorTopics()
+void albatros_motor_board::MotorBoardNodeBase::advertiseMotorTopics()
 {
   ros::SubscriberStatusCallback speeds_subs_cb =
       boost::bind(&MotorBoardNodeBase::speedsSubscribedCallback,this,_1);
@@ -60,12 +60,12 @@ void albatros_motorboard::MotorBoardNodeBase::advertiseMotorTopics()
       boost::bind(&MotorBoardNodeBase::statusSubscribedCallback,this,_1);
   ros::SubscriberStatusCallback status_unsubs_cb =
       boost::bind(&MotorBoardNodeBase::statusUnsubscribedCallback,this,_1);
-  publ_status_ = node_.advertise<albatros_motorboard::MotorStatus>("status",1,
+  publ_status_ = node_.advertise<albatros_motor_board::MotorStatus>("status",1,
                                                                    status_subs_cb,
                                                                    status_unsubs_cb);
 }
 
-void albatros_motorboard::MotorBoardNodeBase::advertiseSensorTopics()
+void albatros_motor_board::MotorBoardNodeBase::advertiseSensorTopics()
 {
   ros::SubscriberStatusCallback pressure_subs_cb =
       boost::bind(&MotorBoardNodeBase::pressureSubscribedCallback,this,_1);
@@ -76,23 +76,23 @@ void albatros_motorboard::MotorBoardNodeBase::advertiseSensorTopics()
                                                        pressure_unsubs_cb);
 }
 
-void albatros_motorboard::MotorBoardNodeBase::initDynParamsSrv()
+void albatros_motor_board::MotorBoardNodeBase::initDynParamsSrv()
 {
   dyn_params_srv_.setCallback( boost::bind(&MotorBoardNodeBase::dynReconfigureParams,this,_1,_2) );
 }
 
-void albatros_motorboard::MotorBoardNodeBase::subscribeMotorTopics()
+void albatros_motor_board::MotorBoardNodeBase::subscribeMotorTopics()
 {
   subs_speeds_ = node_.subscribe("speeds_pc",1, &MotorBoardNodeBase::updateSpeedsCallback, this);
 }
 
-void albatros_motorboard::MotorBoardNodeBase::cleanUp()
+void albatros_motor_board::MotorBoardNodeBase::cleanUp()
 {
     mbctrl_.closeComm();
 }
 
 
-void albatros_motorboard::MotorBoardNodeBase::getMotorAccelsParams(MotorBoardCtrl::MotorAccels* accels)
+void albatros_motor_board::MotorBoardNodeBase::getMotorAccelsParams(MotorBoardCtrl::MotorAccels* accels)
 {
   (*accels)[mbctrl_.FORWARD_LEFT]   = current_params_.forward_left_accel;
   (*accels)[mbctrl_.FORWARD_RIGHT]  = current_params_.forward_right_accel;
@@ -100,7 +100,7 @@ void albatros_motorboard::MotorBoardNodeBase::getMotorAccelsParams(MotorBoardCtr
   (*accels)[mbctrl_.DOWNWARD_RIGHT] = current_params_.downward_right_accel;
 }
 
-void albatros_motorboard::MotorBoardNodeBase::getMotorCtrlParams(const MotorBoardCtrl::Motor& m,
+void albatros_motor_board::MotorBoardNodeBase::getMotorCtrlParams(const MotorBoardCtrl::Motor& m,
                                                                  bool *PID_on,
                                                                  MotorBoardCtrl::PIDConstants* PID_Kpid)
 {
@@ -133,7 +133,7 @@ void albatros_motorboard::MotorBoardNodeBase::getMotorCtrlParams(const MotorBoar
   }
 }
 
-void albatros_motorboard::MotorBoardNodeBase::getSensorOffsetParam(const MotorBoardCtrl::Sensor& s,
+void albatros_motor_board::MotorBoardNodeBase::getSensorOffsetParam(const MotorBoardCtrl::Sensor& s,
                                                                    int* offset)
 {
   switch(s)
@@ -148,8 +148,8 @@ void albatros_motorboard::MotorBoardNodeBase::getSensorOffsetParam(const MotorBo
 }
 
 template <typename T>
-bool albatros_motorboard::MotorBoardNodeBase::updateParam(T* old_val,
-                                                          const T& new_val)
+bool albatros_motor_board::MotorBoardNodeBase::updateParam(T* old_val,
+                                                           const T& new_val)
 {
   if (*old_val != new_val)
   {
@@ -160,13 +160,13 @@ bool albatros_motorboard::MotorBoardNodeBase::updateParam(T* old_val,
     return false;
 }
 
-bool albatros_motorboard::MotorBoardNodeBase::updateCommNameParam(const MotorBoardDynParamsConfig& params)
+bool albatros_motor_board::MotorBoardNodeBase::updateCommNameParam(const MotorBoardDynParamsConfig& params)
 {
   bool res = updateParam(&(current_params_.serial_port), params.serial_port);
   return res;
 }
 
-bool albatros_motorboard::MotorBoardNodeBase::updateMotorAccelsParams(const MotorBoardDynParamsConfig& params)
+bool albatros_motor_board::MotorBoardNodeBase::updateMotorAccelsParams(const MotorBoardDynParamsConfig& params)
 {
   bool res = updateParam(&(current_params_.forward_left_accel  ), params.forward_left_accel);
   res += updateParam(&(current_params_.forward_right_accel ), params.forward_right_accel);
@@ -175,8 +175,8 @@ bool albatros_motorboard::MotorBoardNodeBase::updateMotorAccelsParams(const Moto
   return res;
 }
 
-bool albatros_motorboard::MotorBoardNodeBase::updateMotorCtrlParams(const MotorBoardDynParamsConfig& params,
-                                                                    const MotorBoardCtrl::Motor& m)
+bool albatros_motor_board::MotorBoardNodeBase::updateMotorCtrlParams(const MotorBoardDynParamsConfig& params,
+                                                                     const MotorBoardCtrl::Motor& m)
 {
   bool res = false;
   switch(m)
@@ -209,8 +209,8 @@ bool albatros_motorboard::MotorBoardNodeBase::updateMotorCtrlParams(const MotorB
   return res;
 }
 
-bool albatros_motorboard::MotorBoardNodeBase::updateSensorOffsetParam(const MotorBoardDynParamsConfig& params,
-                                                                      const MotorBoardCtrl::Sensor& s)
+bool albatros_motor_board::MotorBoardNodeBase::updateSensorOffsetParam(const MotorBoardDynParamsConfig& params,
+                                                                       const MotorBoardCtrl::Sensor& s)
 {
   bool res = false;
   switch(s)
@@ -225,13 +225,13 @@ bool albatros_motorboard::MotorBoardNodeBase::updateSensorOffsetParam(const Moto
   return res;
 }
 
-bool albatros_motorboard::MotorBoardNodeBase::updateTimerRateParam(const MotorBoardDynParamsConfig& params)
+bool albatros_motor_board::MotorBoardNodeBase::updateTimerRateParam(const MotorBoardDynParamsConfig& params)
 {
   bool res = updateParam(&(current_params_.rate),params.rate);
   return res;
 }
 
-bool albatros_motorboard::MotorBoardNodeBase::updateInvertSpeedParams(const MotorBoardDynParamsConfig& params)
+bool albatros_motor_board::MotorBoardNodeBase::updateInvertSpeedParams(const MotorBoardDynParamsConfig& params)
 {
   bool res = updateParam(&(current_params_.forward_left_invert), params.forward_left_invert);
   res += updateParam(&(current_params_.forward_right_invert), params.forward_right_invert);
@@ -240,14 +240,14 @@ bool albatros_motorboard::MotorBoardNodeBase::updateInvertSpeedParams(const Moto
   return res;
 }
 
-void albatros_motorboard::MotorBoardNodeBase::updateCommName()
+void albatros_motor_board::MotorBoardNodeBase::updateCommName()
 {
   ROS_INFO_STREAM("Setting serial communication port to device "
                   << current_params_.serial_port);
   mbctrl_.openComm(current_params_.serial_port);
 }
 
-void albatros_motorboard::MotorBoardNodeBase::updateMotorAccels()
+void albatros_motor_board::MotorBoardNodeBase::updateMotorAccels()
 {
   MotorBoardCtrl::MotorAccels accels, accels_res;
   getMotorAccelsParams(&accels);
@@ -260,7 +260,7 @@ void albatros_motorboard::MotorBoardNodeBase::updateMotorAccels()
   ROS_INFO_STREAM("  down  right : " << accels_res[mbctrl_.DOWNWARD_RIGHT]);
 }
 
-void albatros_motorboard::MotorBoardNodeBase::updateMotorCtrl(MotorBoardCtrl::Motor m)
+void albatros_motor_board::MotorBoardNodeBase::updateMotorCtrl(MotorBoardCtrl::Motor m)
 {
   bool PID_on, PID_on_res;
   MotorBoardCtrl::PIDConstants PID_Kpid, PID_Kpid_res;
@@ -274,7 +274,7 @@ void albatros_motorboard::MotorBoardNodeBase::updateMotorCtrl(MotorBoardCtrl::Mo
   ROS_INFO_STREAM("  Kd : " << PID_Kpid_res[MotorBoardCtrl::D]);
 }
 
-void albatros_motorboard::MotorBoardNodeBase::updateSensorOffset(MotorBoardCtrl::Sensor s)
+void albatros_motor_board::MotorBoardNodeBase::updateSensorOffset(MotorBoardCtrl::Sensor s)
 {
   int offset;
   getSensorOffsetParam(s, &offset);
@@ -283,7 +283,7 @@ void albatros_motorboard::MotorBoardNodeBase::updateSensorOffset(MotorBoardCtrl:
   ROS_INFO_STREAM("Sensor " << s << " offset response : " << offset);
 }
 
-void albatros_motorboard::MotorBoardNodeBase::updateTimerRate()
+void albatros_motor_board::MotorBoardNodeBase::updateTimerRate()
 {
   if (timed_caller_)
   {
@@ -310,7 +310,7 @@ void albatros_motorboard::MotorBoardNodeBase::updateTimerRate()
   }
 }
 
-void albatros_motorboard::MotorBoardNodeBase::checkVersion()
+void albatros_motor_board::MotorBoardNodeBase::checkVersion()
 {
   int version_num;
   ROS_INFO_STREAM("Retrieving firmware version number");
@@ -318,7 +318,7 @@ void albatros_motorboard::MotorBoardNodeBase::checkVersion()
   ROS_INFO_STREAM("Firmware version response : " << version_num);
 }
 
-void albatros_motorboard::MotorBoardNodeBase::checkSensorConfig(MotorBoardCtrl::Sensor s)
+void albatros_motor_board::MotorBoardNodeBase::checkSensorConfig(MotorBoardCtrl::Sensor s)
 {
   int type, resolution, bits, min, max;
   ROS_INFO_STREAM("Retrieving sensor " << s << " configuration");
@@ -330,7 +330,7 @@ void albatros_motorboard::MotorBoardNodeBase::checkSensorConfig(MotorBoardCtrl::
   ROS_INFO_STREAM("  range      : [ " << min << " , " << max << " ]");
 }
 
-void albatros_motorboard::MotorBoardNodeBase::initialize(const MotorBoardDynParamsConfig& params)
+void albatros_motor_board::MotorBoardNodeBase::initialize(const MotorBoardDynParamsConfig& params)
 {
   ROS_INFO_STREAM("Opening serial communication on device : " << current_params_.serial_port);
   mbctrl_.openComm(current_params_.serial_port);
@@ -354,7 +354,7 @@ void albatros_motorboard::MotorBoardNodeBase::initialize(const MotorBoardDynPara
   updateTimerRate();
 }
 
-void albatros_motorboard::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDynParamsConfig& params, uint32_t level)
+void albatros_motor_board::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDynParamsConfig& params, uint32_t level)
 {
   try
   {
@@ -389,11 +389,11 @@ void albatros_motorboard::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDyn
   }
   catch (std::exception& e)
   {
-    ROS_ERROR_STREAM("[motorboard_node] Error reconfiguring device : " << e.what());
+    ROS_ERROR_STREAM("Error reconfiguring motor board node : " << e.what());
   }
 }
 
-void albatros_motorboard::MotorBoardNodeBase::publishPressure()
+void albatros_motor_board::MotorBoardNodeBase::publishPressure()
 {
   try
   {
@@ -411,8 +411,8 @@ void albatros_motorboard::MotorBoardNodeBase::publishPressure()
   }
 }
 
-void albatros_motorboard::MotorBoardNodeBase::fillMotorSpeedsMsg(const MotorBoardCtrl::MotorSpeeds& s,
-                                                                 srv_msgs::MotorLevels* m )
+void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeedsMsg(const MotorBoardCtrl::MotorSpeeds& s,
+                                                                  srv_msgs::MotorLevels* m )
 {
   m->levels[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
                                                ? -s[mbctrl_.FORWARD_LEFT]
@@ -428,7 +428,7 @@ void albatros_motorboard::MotorBoardNodeBase::fillMotorSpeedsMsg(const MotorBoar
                                                : +s[mbctrl_.DOWNWARD_RIGHT];
 }
 
-void albatros_motorboard::MotorBoardNodeBase::publishSpeeds()
+void albatros_motor_board::MotorBoardNodeBase::publishSpeeds()
 {
   try
   {
@@ -446,7 +446,7 @@ void albatros_motorboard::MotorBoardNodeBase::publishSpeeds()
   }
 }
 
-void albatros_motorboard::MotorBoardNodeBase::publishStatus()
+void albatros_motor_board::MotorBoardNodeBase::publishStatus()
 {
   try
   {
@@ -465,7 +465,7 @@ void albatros_motorboard::MotorBoardNodeBase::publishStatus()
   }
 }
 
-void albatros_motorboard::MotorBoardNodeBase::timedPublishCallback()
+void albatros_motor_board::MotorBoardNodeBase::timedPublishCallback()
 {
   if (publish_pressure_)
      publishPressure();
@@ -475,8 +475,8 @@ void albatros_motorboard::MotorBoardNodeBase::timedPublishCallback()
      publishStatus();
 }
 
-void albatros_motorboard::MotorBoardNodeBase::fillMotorSpeeds(const srv_msgs::MotorLevels& m,
-                                                              MotorBoardCtrl::MotorSpeeds* s)
+void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeeds(const srv_msgs::MotorLevels& m,
+                                                               MotorBoardCtrl::MotorSpeeds* s)
 {
   (*s)[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
                                    ? -m.levels[mbctrl_.FORWARD_LEFT]
@@ -492,7 +492,7 @@ void albatros_motorboard::MotorBoardNodeBase::fillMotorSpeeds(const srv_msgs::Mo
                                    : +m.levels[mbctrl_.DOWNWARD_RIGHT];
 }
 
-void albatros_motorboard::MotorBoardNodeBase::updateSpeedsCallback(const srv_msgs::MotorLevels& msg)
+void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_msgs::MotorLevels& msg)
 {
   const int num_motors = msg.levels.size();
   if ( num_motors != mbctrl_.NUM_MOTORS )
@@ -513,39 +513,38 @@ void albatros_motorboard::MotorBoardNodeBase::updateSpeedsCallback(const srv_msg
   }
 }
 
-void albatros_motorboard::MotorBoardNodeBase::speedsSubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
+void albatros_motor_board::MotorBoardNodeBase::speedsSubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
 {
   if (num_speeds_subscribers_++ == 0)
     publish_speeds_ = true;
 }
 
-void albatros_motorboard::MotorBoardNodeBase::speedsUnsubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
+void albatros_motor_board::MotorBoardNodeBase::speedsUnsubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
 {
   if (--num_speeds_subscribers_ == 0)
     publish_speeds_ = false;
 }
 
-void albatros_motorboard::MotorBoardNodeBase::statusSubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
+void albatros_motor_board::MotorBoardNodeBase::statusSubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
 {
   if (num_status_subscribers_++ == 0)
     publish_status_ = true;
 }
 
-void albatros_motorboard::MotorBoardNodeBase::statusUnsubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
+void albatros_motor_board::MotorBoardNodeBase::statusUnsubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
 {
   if (--num_status_subscribers_ == 0)
     publish_status_ = false;
 }
 
-void albatros_motorboard::MotorBoardNodeBase::pressureSubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
+void albatros_motor_board::MotorBoardNodeBase::pressureSubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
 {
   if (num_pressure_subscribers_++ == 0)
     publish_pressure_ = true;
 }
 
-void albatros_motorboard::MotorBoardNodeBase::pressureUnsubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
+void albatros_motor_board::MotorBoardNodeBase::pressureUnsubscribedCallback(const ros::SingleSubscriberPublisher& ssp)
 {
   if (--num_pressure_subscribers_ == 0)
     publish_pressure_ = false;
 }
-

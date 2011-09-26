@@ -23,7 +23,7 @@
 #include "serialcomm.h"
 #include "commandmsg.h"
 
-namespace albatros_motorboard
+namespace albatros_motor_board
 {
 
 using serial::SerialComm;
@@ -121,7 +121,6 @@ std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::Motor& m);
 std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::Sensor& s);
 std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::PIDConstant& k);
 
-} // namespace motorboard
+} // namespace
 
 #endif
-

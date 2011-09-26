@@ -1,5 +1,5 @@
 # Specific files
-src/albatros_motorboard/
+src/albatros_motor_board/
 
 # Build objects
 lib/

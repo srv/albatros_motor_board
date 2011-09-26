@@ -21,7 +21,7 @@
 /**
  * @brief Default constructor
  */
-albatros_motorboard::MotorBoardCtrl::MotorBoardCtrl() :
+albatros_motor_board::MotorBoardCtrl::MotorBoardCtrl() :
   comm_()
 {
 }
@@ -31,7 +31,7 @@ albatros_motorboard::MotorBoardCtrl::MotorBoardCtrl() :
  * @param dev_name device file name (including full path) representing the
  *              serial port
  */
-void albatros_motorboard::MotorBoardCtrl::openComm(std::string dev_name)
+void albatros_motor_board::MotorBoardCtrl::openComm(std::string dev_name)
 {
   int status = 0;
   if (!comm_.openDevice(dev_name, status))
@@ -49,7 +49,7 @@ void albatros_motorboard::MotorBoardCtrl::openComm(std::string dev_name)
 /**
  * @brief Close serial communication
  */
-void albatros_motorboard::MotorBoardCtrl::closeComm()
+void albatros_motor_board::MotorBoardCtrl::closeComm()
 {
   int status = 0;
   if (!comm_.closeDevice(status))
@@ -63,7 +63,7 @@ void albatros_motorboard::MotorBoardCtrl::closeComm()
  * Discard bytes received from the board but not read, 
  * and bytes written but not sent to the board
  */
-void albatros_motorboard::MotorBoardCtrl::flushComm()
+void albatros_motor_board::MotorBoardCtrl::flushComm()
 {
   int status;
   bool success = comm_.flushBuffer(status);
@@ -76,7 +76,7 @@ void albatros_motorboard::MotorBoardCtrl::flushComm()
  * @brief Get the device file name of the serial port
  * @return device file name (including full path) set on opening
  */
-std::string albatros_motorboard::MotorBoardCtrl::getCommName()
+std::string albatros_motor_board::MotorBoardCtrl::getCommName()
 {
   return comm_.getDeviceName();
 }
@@ -89,7 +89,7 @@ std::string albatros_motorboard::MotorBoardCtrl::getCommName()
  * during the reading operation (including no response from the board)
  * an exception is thrown.
  */
-void albatros_motorboard::MotorBoardCtrl::readCommand(CmdMsg* cmd)
+void albatros_motor_board::MotorBoardCtrl::readCommand(CmdMsg* cmd)
 {
   unsigned long numBytesRead;
   int status = 0;
@@ -117,7 +117,7 @@ void albatros_motorboard::MotorBoardCtrl::readCommand(CmdMsg* cmd)
  *
  * If there are errors during the writing operation an exception is thrown
  */
-void albatros_motorboard::MotorBoardCtrl::sendCommand(const CmdMsg& cmd)
+void albatros_motor_board::MotorBoardCtrl::sendCommand(const CmdMsg& cmd)
 {
   int status;
   unsigned long numBytesWritten;
@@ -136,7 +136,7 @@ void albatros_motorboard::MotorBoardCtrl::sendCommand(const CmdMsg& cmd)
  * This function is just a wrapper for the sendCommand() and readCommand()
  * functions. These calls raise an exception when errors
  */
-void albatros_motorboard::MotorBoardCtrl::queryCommand(const CmdMsg& request, 
+void albatros_motor_board::MotorBoardCtrl::queryCommand(const CmdMsg& request,
                                               CmdMsg* response)
 {
   //TODO: Check serial flush before sending the request
@@ -153,7 +153,7 @@ void albatros_motorboard::MotorBoardCtrl::queryCommand(const CmdMsg& request,
  * Wrapper to the respective parsers and query calls
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::getVersion(int* num)
+void albatros_motor_board::MotorBoardCtrl::getVersion(int* num)
 {
   CmdMsg request, response;
   uint8_t num8;
@@ -173,7 +173,7 @@ void albatros_motorboard::MotorBoardCtrl::getVersion(int* num)
  * Wrapper to the respective parsers and query calls
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::getSpeeds(MotorSpeeds* rpm)
+void albatros_motor_board::MotorBoardCtrl::getSpeeds(MotorSpeeds* rpm)
 {
   CmdMsg request, response;
   int16_t rpm16[NUM_MOTORS];
@@ -195,7 +195,7 @@ void albatros_motorboard::MotorBoardCtrl::getSpeeds(MotorSpeeds* rpm)
  * Wrapper to the respective parsers and query calls.
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::setSpeeds(const MotorSpeeds& req_pc,
+void albatros_motor_board::MotorBoardCtrl::setSpeeds(const MotorSpeeds& req_pc,
                                            MotorSpeeds* res_rpm)
 {
   CmdMsg request, response;
@@ -220,7 +220,7 @@ void albatros_motorboard::MotorBoardCtrl::setSpeeds(const MotorSpeeds& req_pc,
  * Wrapper to the respective parsers and query calls.
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::getAccels(MotorAccels* pc)
+void albatros_motor_board::MotorBoardCtrl::getAccels(MotorAccels* pc)
 {
   CmdMsg request, response;
   uint8_t pc8[NUM_MOTORS];
@@ -241,7 +241,7 @@ void albatros_motorboard::MotorBoardCtrl::getAccels(MotorAccels* pc)
  * Wrapper to the respective parsers and query calls.
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::setAccels(const MotorAccels& req_pc_ds,
+void albatros_motor_board::MotorBoardCtrl::setAccels(const MotorAccels& req_pc_ds,
                                            MotorAccels* res_pc_ds)
 {
   CmdMsg request, response;
@@ -259,14 +259,14 @@ void albatros_motorboard::MotorBoardCtrl::setAccels(const MotorAccels& req_pc_ds
       (*res_pc_ds)[i] = pc8[i];
 }
 
-void albatros_motorboard::MotorBoardCtrl::getStatus(MotorStatus* errors)
+void albatros_motor_board::MotorBoardCtrl::getStatus(MotorStatus* errors)
 {
   CmdMsg request, response;
   uint8_t errors8[4] = {0,0,0,0};
-  if(!albatros_motorboard::parseMotorGetStatusRequest(&request))
+  if(!albatros_motor_board::parseMotorGetStatusRequest(&request))
     throw MotorBoardError("Error parsing get status request : " + std::string(request) );
   queryCommand(request,&response);
-  if(!albatros_motorboard::parseMotorGetStatusResponse(response, &errors8[0], &errors8[1], &errors8[2], &errors8[3]))
+  if(!albatros_motor_board::parseMotorGetStatusResponse(response, &errors8[0], &errors8[1], &errors8[2], &errors8[3]))
     throw MotorBoardError("Error parsing get status response : " + std::string(response) );
   for (int i=0; i<NUM_MOTORS; i++)
     (*errors)[i] = errors8[i];
@@ -283,7 +283,7 @@ void albatros_motorboard::MotorBoardCtrl::getStatus(MotorStatus* errors)
  * by the parsers.
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::getMotorctrl(const Motor motor_id,
+void albatros_motor_board::MotorBoardCtrl::getMotorctrl(const Motor motor_id,
                                               bool* active, PIDConstants* Kpid)
 {
   CmdMsg request, response;
@@ -316,7 +316,7 @@ void albatros_motorboard::MotorBoardCtrl::getMotorctrl(const Motor motor_id,
  * the parsers.
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::setMotorctrl(const Motor motor_id,
+void albatros_motor_board::MotorBoardCtrl::setMotorctrl(const Motor motor_id,
                                               bool active, const PIDConstants& Kpid,
                                               bool* res_active, PIDConstants* res_Kpid)
 {
@@ -357,7 +357,7 @@ void albatros_motorboard::MotorBoardCtrl::setMotorctrl(const Motor motor_id,
  * Wrapper to the respective parsers and query calls.
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::getSensorConfig(const Sensor sensor_id,
+void albatros_motor_board::MotorBoardCtrl::getSensorConfig(const Sensor sensor_id,
                                                  int* type, int* res, int* ADCbits,
                                                  int* min, int* max)
 {
@@ -390,10 +390,10 @@ void albatros_motorboard::MotorBoardCtrl::getSensorConfig(const Sensor sensor_id
  * Wrapper to the respective parsers and query calls.
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::getSensorOffset(const Sensor sensor_id,
+void albatros_motor_board::MotorBoardCtrl::getSensorOffset(const Sensor sensor_id,
                                                  int* offset)
 {
-  albatros_motorboard::CmdMsg request, response;
+  albatros_motor_board::CmdMsg request, response;
   uint8_t sensor_num;
   int16_t offset16;
   if(!parseSensorGetOffsetRequest(&request, sensor_id))
@@ -417,7 +417,7 @@ void albatros_motorboard::MotorBoardCtrl::getSensorOffset(const Sensor sensor_id
  * Wrapper to the respective parsers and query calls.
  * On errors it throws an exception
  */
-void albatros_motorboard::MotorBoardCtrl::setSensorOffset(const Sensor sensor_id,
+void albatros_motor_board::MotorBoardCtrl::setSensorOffset(const Sensor sensor_id,
                                                  int offset, int* res_offset)
 {
   CmdMsg request, response;
@@ -446,7 +446,7 @@ void albatros_motorboard::MotorBoardCtrl::setSensorOffset(const Sensor sensor_id
  * On errors it throws an exception
  * TODO: Check output meaning (related with offset)
  */
-void albatros_motorboard::MotorBoardCtrl::getSensorValue(const Sensor sensor_id,
+void albatros_motor_board::MotorBoardCtrl::getSensorValue(const Sensor sensor_id,
                                                 int* value, int* adc_value)
 {
   CmdMsg request, response;
@@ -471,7 +471,7 @@ void albatros_motorboard::MotorBoardCtrl::getSensorValue(const Sensor sensor_id,
  * @param m motor identifier
  * @return reference to the output stream
  */
-std::ostream& albatros_motorboard::operator<<(std::ostream& ostr,
+std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
                                               const MotorBoardCtrl::Motor& m)
 {
   return ostr << int(m);
@@ -483,7 +483,7 @@ std::ostream& albatros_motorboard::operator<<(std::ostream& ostr,
  * @param s sensor identifier
  * @return reference to the output stream
  */
-std::ostream& albatros_motorboard::operator<<(std::ostream& ostr,
+std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
                                               const MotorBoardCtrl::Sensor& s)
 {
   return ostr << int(s);
@@ -495,7 +495,7 @@ std::ostream& albatros_motorboard::operator<<(std::ostream& ostr,
  * @param k PID constant indetifier
  * @return reference to the output stream
  */
-std::ostream& albatros_motorboard::operator<<(std::ostream& ostr,
+std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
                                               const MotorBoardCtrl::PIDConstant& k)
 {
   return ostr << int(k);

@@ -1,5 +1,5 @@
 <package>
-  <description brief="albatros_motorboard">
+  <description brief="albatros_motor_board">
 
      This package contains several nodes to manage a motor board provided by
      Albatros. The motor board is equipped with sensors (water in and pressure)

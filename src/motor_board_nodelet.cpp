@@ -35,12 +35,12 @@
  * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID derivative constant (double default 0.0)
  */
 
-#include "albatros_motorboard_node_base.h"
+#include "motor_board_node_base.h"
 #include <ros/ros.h>
 #include <pluginlib/class_list_macros.h>
 #include <nodelet/nodelet.h>
 
-namespace albatros_motorboard
+namespace albatros_motor_board
 {
 
 /**
@@ -62,20 +62,17 @@ private:
  * @brief Default constructor (doing nothing).
  * @return
  */
-albatros_motorboard::MotorBoardNodelet::MotorBoardNodelet()
+albatros_motor_board::MotorBoardNodelet::MotorBoardNodelet()
 {}
 
 /**
  * @brief Nodelet initialization.
  * @note Must return immediately.
  */
-void albatros_motorboard::MotorBoardNodelet::onInit()
+void albatros_motor_board::MotorBoardNodelet::onInit()
 {
-  // ROS initialization
-  ros::init(argc, argv, "motor_board_nodelet");
-
-  ros::NodeHandle node;
-  ros::NodeHandle priv("~");
+  ros::NodeHandle node(getNodeHandle(),"motorboard");
+  ros::NodeHandle priv(getPrivateNodeHandle());
   mb_node_.reset(new MotorBoardNodeBase(node,priv));
 
   // advertise output topics
@@ -95,7 +92,7 @@ void albatros_motorboard::MotorBoardNodelet::onInit()
  * @brief Destructor (calling the cleanUp() function).
  * @return
  */
-albatros_motorboard::MotorBoardNodelet::~MotorBoardNodelet()
+albatros_motor_board::MotorBoardNodelet::~MotorBoardNodelet()
 {
   mb_node_->cleanUp();
 }
@@ -104,4 +101,4 @@ albatros_motorboard::MotorBoardNodelet::~MotorBoardNodelet()
 // Register this plugin with pluginlib.
 // Names must match *nodelet.xml in package directory.
 // Parameters are: package, class name, class type, base class type
-PLUGINLIB_DECLARE_CLASS(albatros_motorboard, albatros_motorboard::MotorBoardNodelet, nodelet::Nodelet);
+PLUGINLIB_DECLARE_CLASS(albatros_motor_board, motor_board_nodelet, albatros_motor_board::MotorBoardNodelet, nodelet::Nodelet);

@@ -45,7 +45,7 @@
 #include <string>
 #include <stdint.h>
 
-namespace albatros_motorboard
+namespace albatros_motor_board
 {
 
 /**
@@ -343,6 +343,6 @@ bool parseSensorGetValueResponse(const CmdMsg& res, uint8_t* sensor,
                                  int16_t* sensor_val, int32_t* adc_val);
 
 
-} // namespace motorboard
+} // namespace albatros_motor_board
 
 #endif // COMMANDMSG_H

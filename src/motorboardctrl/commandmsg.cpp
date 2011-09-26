@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 //!@addtogroup command
 //!@{
-const albatros_motorboard::CmdId* albatros_motorboard::MODULE_CMD_ID[NUM_MODULE_TYPES] =
+const albatros_motor_board::CmdId* albatros_motor_board::MODULE_CMD_ID[NUM_MODULE_TYPES] =
                           { LED_CMD,       //!> LED cmd id table
                             MOTOR_CMD,     //!> MOTOR cmd id table
                             MOTORCTRL_CMD, //!> MOTORCTRL cmd id table
@@ -41,8 +41,10 @@ const char cmd_msg_fmt[] = "S%03x%016s%04xX\r";
  * @param checksum command checksum already computed
  * @return false on errors building the command request, true if success
  */
-bool albatros_motorboard::parseRequest(CmdMsg* req, CmdId id, const CmdPayload& payload,
-                              CmdChecksum checksum)
+bool albatros_motor_board::parseRequest(CmdMsg* req,
+                                        CmdId id,
+                                        const CmdPayload& payload,
+                                        CmdChecksum checksum)
 {
   const int n = sprintf(*req, cmd_msg_fmt, id, payload, checksum);
   return (n == CMD_MSG_LENGTH);
@@ -57,8 +59,10 @@ bool albatros_motorboard::parseRequest(CmdMsg* req, CmdId id, const CmdPayload& 
  * @return false on errors parsing the command request, true if success.
  *      Output values may be improperly set if errors.
  */
-bool albatros_motorboard::parseResponse(const CmdMsg& res, CmdId* id,
-                               CmdPayload* payload, CmdChecksum* checksum)
+bool albatros_motor_board::parseResponse(const CmdMsg& res,
+                                         CmdId* id,
+                                         CmdPayload* payload,
+                                         CmdChecksum* checksum)
 {
   const int n = sscanf(res, cmd_msg_fmt, id, *payload, checksum);
 //std::cout << res[0] << std::endl;
@@ -84,7 +88,7 @@ bool albatros_motorboard::parseResponse(const CmdMsg& res, CmdId* id,
  * @param req pointer to the request to fill
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseLedGetImaxRequest(CmdMsg* req)
+bool albatros_motor_board::parseLedGetImaxRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[LED][LED_GET_IMAX];
   const CmdChecksum checksum = id;
@@ -105,9 +109,9 @@ bool albatros_motorboard::parseLedGetImaxRequest(CmdMsg* req)
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseLedGetImaxResponse(const CmdMsg& res,
-                                         uint16_t* imax0,
-                                         uint16_t* imax1)
+bool albatros_motor_board::parseLedGetImaxResponse(const CmdMsg& res,
+                                                   uint16_t* imax0,
+                                                   uint16_t* imax1)
 {
   CmdId id;
   CmdPayload payload;
@@ -130,7 +134,7 @@ bool albatros_motorboard::parseLedGetImaxResponse(const CmdMsg& res,
  * @param req pointer to the request to fill
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseLedGetIcurrentRequest(CmdMsg* req)
+bool albatros_motor_board::parseLedGetIcurrentRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[LED][LED_GET_ICURRENT];
   const CmdChecksum checksum = id;
@@ -151,8 +155,9 @@ bool albatros_motorboard::parseLedGetIcurrentRequest(CmdMsg* req)
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseLedGetIcurrentResponse(const CmdMsg& res,
-                                             uint16_t* icur0, uint16_t* icur1)
+bool albatros_motor_board::parseLedGetIcurrentResponse(const CmdMsg& res,
+                                                       uint16_t* icur0,
+                                                       uint16_t* icur1)
 {
   CmdId id;
   CmdPayload payload;
@@ -176,7 +181,7 @@ bool albatros_motorboard::parseLedGetIcurrentResponse(const CmdMsg& res,
  * @return true on success, false on errors composing the request
  */
 // TODO: There are 3 levels in albatross' ODS, but only 2 levels in their code
-bool albatros_motorboard::parseLedGetLevelRequest(CmdMsg* req)
+bool albatros_motor_board::parseLedGetLevelRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[LED][LED_GET_LEVEL];
   const CmdChecksum checksum = id;
@@ -198,8 +203,9 @@ bool albatros_motorboard::parseLedGetLevelRequest(CmdMsg* req)
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseLedGetLevelResponse(const CmdMsg& res,
-                                          uint8_t* lev0, uint8_t* lev1)
+bool albatros_motor_board::parseLedGetLevelResponse(const CmdMsg& res,
+                                                    uint8_t* lev0,
+                                                    uint8_t* lev1)
 {
   CmdId id;
   CmdPayload payload;
@@ -226,8 +232,9 @@ bool albatros_motorboard::parseLedGetLevelResponse(const CmdMsg& res,
  *
  * No check is done to to assert that arguments are in range 0..100.
  */
-bool albatros_motorboard::parseLedSetLevelRequest(CmdMsg* req,
-                                         uint8_t lev0, uint8_t lev1)
+bool albatros_motor_board::parseLedSetLevelRequest(CmdMsg* req,
+                                                   uint8_t lev0,
+                                                   uint8_t lev1)
 {
   const CmdId id = MODULE_CMD_ID[LED][LED_SET_LEVEL];
   const CmdChecksum checksum = id + lev0 + lev1;
@@ -249,8 +256,9 @@ bool albatros_motorboard::parseLedSetLevelRequest(CmdMsg* req,
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseLedSetLevelResponse(const CmdMsg& res,
-                                          uint8_t* lev0, uint8_t* lev1)
+bool albatros_motor_board::parseLedSetLevelResponse(const CmdMsg& res,
+                                                    uint8_t* lev0,
+                                                    uint8_t* lev1)
 {
   CmdId id;
   CmdPayload payload;
@@ -273,7 +281,7 @@ bool albatros_motorboard::parseLedSetLevelResponse(const CmdMsg& res,
  * @param req pointer to the request to fill
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseLedGetTemperatureRequest(CmdMsg* req)
+bool albatros_motor_board::parseLedGetTemperatureRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[LED][LED_GET_TEMPERATURE];
   const CmdChecksum checksum = id;
@@ -294,9 +302,9 @@ bool albatros_motorboard::parseLedGetTemperatureRequest(CmdMsg* req)
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseLedGetTemperatureResponse(const CmdMsg& res,
-                                                uint16_t* temp0,
-                                                uint16_t* temp1)
+bool albatros_motor_board::parseLedGetTemperatureResponse(const CmdMsg& res,
+                                                          uint16_t* temp0,
+                                                          uint16_t* temp1)
 {
   CmdId id;
   CmdPayload payload;
@@ -319,7 +327,7 @@ bool albatros_motorboard::parseLedGetTemperatureResponse(const CmdMsg& res,
  * @param req pointer to the request to fill
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseLedGetStatusRequest(CmdMsg* req)
+bool albatros_motor_board::parseLedGetStatusRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[LED][LED_GET_STATUS];
   const CmdChecksum checksum = id;
@@ -340,9 +348,9 @@ bool albatros_motorboard::parseLedGetStatusRequest(CmdMsg* req)
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseLedGetStatusResponse(const CmdMsg& res,
-                                           uint8_t* stat0,
-                                           uint8_t* stat1)
+bool albatros_motor_board::parseLedGetStatusResponse(const CmdMsg& res,
+                                                     uint8_t* stat0,
+                                                     uint8_t* stat1)
 {
   CmdId id;
   CmdPayload payload;
@@ -365,7 +373,7 @@ bool albatros_motorboard::parseLedGetStatusResponse(const CmdMsg& res,
  * @param req pointer to the request to fill
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseGetVersionRequest(CmdMsg* req)
+bool albatros_motor_board::parseGetVersionRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[LED][LED_GET_VERSION];
   const CmdChecksum checksum = id;
@@ -385,7 +393,8 @@ bool albatros_motorboard::parseGetVersionRequest(CmdMsg* req)
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseGetVersionResponse(const CmdMsg& res, uint8_t* vers)
+bool albatros_motor_board::parseGetVersionResponse(const CmdMsg& res,
+                                                   uint8_t* vers)
 {
   CmdId id;
   CmdPayload payload;
@@ -416,8 +425,8 @@ bool albatros_motorboard::parseGetVersionResponse(const CmdMsg& res, uint8_t* ve
  * @param motor number of the motor
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseMotorGetDeviceConfigRequest(CmdMsg* req,
-                                                  uint8_t motor)
+bool albatros_motor_board::parseMotorGetDeviceConfigRequest(CmdMsg* req,
+                                                            uint8_t motor)
 {
   const CmdId id = MODULE_CMD_ID[MOTOR][MOTOR_GET_DEVICE_CONFIG];
   const unsigned int val = motor << 5;
@@ -445,12 +454,12 @@ bool albatros_motorboard::parseMotorGetDeviceConfigRequest(CmdMsg* req,
  * The response contain several parameters for the motor provided by the
  * manufacturer. The exact meaning of these parameters needs to be investigated.
  */
-bool albatros_motorboard::parseMotorGetDeviceConfigResponse(const CmdMsg& res,
-                                                   uint8_t* motor,
-                                                   uint16_t* max_temp,
-                                                   uint16_t* rated_speed_rpm,
-                                                   uint16_t* no_load_speed_rpm,
-                                                   uint16_t* rated_current_ma)
+bool albatros_motor_board::parseMotorGetDeviceConfigResponse(const CmdMsg& res,
+                                                             uint8_t* motor,
+                                                             uint16_t* max_temp,
+                                                             uint16_t* rated_speed_rpm,
+                                                             uint16_t* no_load_speed_rpm,
+                                                             uint16_t* rated_current_ma)
 {
   CmdId id;
   CmdPayload payload;
@@ -485,9 +494,11 @@ bool albatros_motorboard::parseMotorGetDeviceConfigResponse(const CmdMsg& res,
  * No check is done to assert that arguments are in range 0..100.
  * The response to this command provides the speed in rpm instead of %.
  */
-bool albatros_motorboard::parseMotorSetDirectionSpeedRequest(CmdMsg* req,
-                                                    int8_t rpm_pc0, int8_t rpm_pc1,
-                                                    int8_t rpm_pc2, int8_t rpm_pc3)
+bool albatros_motor_board::parseMotorSetDirectionSpeedRequest(CmdMsg* req,
+                                                              int8_t rpm_pc0,
+                                                              int8_t rpm_pc1,
+                                                              int8_t rpm_pc2,
+                                                              int8_t rpm_pc3)
 {
   const CmdId id = MODULE_CMD_ID[MOTOR][MOTOR_SET_DIRECTION_SPEED];
   // bitwise-AND promotes the left argument to unsigned (because the other one
@@ -521,9 +532,11 @@ bool albatros_motorboard::parseMotorSetDirectionSpeedRequest(CmdMsg* req,
  * provides the current speeds. Acceleration must be taken into account
  * (it may be set for each motor with the corresponding command).
  */
-bool albatros_motorboard::parseMotorSetDirectionSpeedResponse(const CmdMsg& res,
-                                                int16_t* rpm0, int16_t* rpm1,
-                                                int16_t* rpm2, int16_t* rpm3)
+bool albatros_motor_board::parseMotorSetDirectionSpeedResponse(const CmdMsg& res,
+                                                                 int16_t* rpm0,
+                                                                 int16_t* rpm1,
+                                                                 int16_t* rpm2,
+                                                                 int16_t* rpm3)
 {
   CmdId id;
   CmdPayload payload;
@@ -553,7 +566,7 @@ bool albatros_motorboard::parseMotorSetDirectionSpeedResponse(const CmdMsg& res,
  * @param req request to compose
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseMotorGetDirectionSpeedRequest(CmdMsg* req)
+bool albatros_motor_board::parseMotorGetDirectionSpeedRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[MOTOR][MOTOR_GET_DIRECTION_SPEED];
   const CmdChecksum checksum = id;
@@ -576,9 +589,11 @@ bool albatros_motorboard::parseMotorGetDirectionSpeedRequest(CmdMsg* req)
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseMotorGetDirectionSpeedResponse(const CmdMsg& res,
-                                                     int16_t* rpm0, int16_t* rpm1,
-                                                     int16_t* rpm2, int16_t* rpm3)
+bool albatros_motor_board::parseMotorGetDirectionSpeedResponse(const CmdMsg& res,
+                                                               int16_t* rpm0,
+                                                               int16_t* rpm1,
+                                                               int16_t* rpm2,
+                                                               int16_t* rpm3)
 {
   CmdId id;
   CmdPayload payload;
@@ -609,9 +624,11 @@ bool albatros_motorboard::parseMotorGetDirectionSpeedResponse(const CmdMsg& res,
  *
  *  No check is done to assert that arguments are in range 0..100
  */
-bool albatros_motorboard::parseMotorSetAccelRequest(CmdMsg* req,
-                                           uint8_t accel0, uint8_t accel1,
-                                           uint8_t accel2, uint8_t accel3)
+bool albatros_motor_board::parseMotorSetAccelRequest(CmdMsg* req,
+                                                     uint8_t accel0,
+                                                     uint8_t accel1,
+                                                     uint8_t accel2,
+                                                     uint8_t accel3)
 {
   const CmdId id = MODULE_CMD_ID[MOTOR][MOTOR_SET_ACCEL];
   const CmdChecksum checksum = id + accel0 + accel1 + accel2 + accel3;
@@ -634,9 +651,11 @@ bool albatros_motorboard::parseMotorSetAccelRequest(CmdMsg* req,
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseMotorSetAccelResponse(const CmdMsg& res,
-                                            uint8_t* accel0, uint8_t* accel1,
-                                            uint8_t* accel2, uint8_t* accel3)
+bool albatros_motor_board::parseMotorSetAccelResponse(const CmdMsg& res,
+                                                      uint8_t* accel0,
+                                                      uint8_t* accel1,
+                                                      uint8_t* accel2,
+                                                      uint8_t* accel3)
 {
   CmdId id;
   CmdPayload payload;
@@ -661,7 +680,7 @@ bool albatros_motorboard::parseMotorSetAccelResponse(const CmdMsg& res,
  * @param req request to compose
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseMotorGetAccelRequest(CmdMsg* req)
+bool albatros_motor_board::parseMotorGetAccelRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[MOTOR][MOTOR_GET_ACCEL];
   const CmdChecksum checksum = id;
@@ -684,9 +703,11 @@ bool albatros_motorboard::parseMotorGetAccelRequest(CmdMsg* req)
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseMotorGetAccelResponse(const CmdMsg& res,
-                                            uint8_t* accel0, uint8_t* accel1,
-                                            uint8_t* accel2, uint8_t* accel3)
+bool albatros_motor_board::parseMotorGetAccelResponse(const CmdMsg& res,
+                                                      uint8_t* accel0,
+                                                      uint8_t* accel1,
+                                                      uint8_t* accel2,
+                                                      uint8_t* accel3)
 {
     CmdId id;
     CmdPayload payload;
@@ -711,7 +732,7 @@ bool albatros_motorboard::parseMotorGetAccelResponse(const CmdMsg& res,
  * @param req request to compose
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseMotorGetTemperatureRequest(CmdMsg* req)
+bool albatros_motor_board::parseMotorGetTemperatureRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[MOTOR][MOTOR_GET_TEMPERATURE];
   const CmdChecksum checksum = id;
@@ -735,9 +756,11 @@ bool albatros_motorboard::parseMotorGetTemperatureRequest(CmdMsg* req)
  *      is correct)
  */
 //TODO: Check the type of arguments (compare to albatross' code, should be uint16_t?)
-bool albatros_motorboard::parseMotorGetTemperatureResponse(const CmdMsg& res,
-                                                  int16_t* temp0, int16_t* temp1,
-                                                  int16_t* temp2, int16_t* temp3)
+bool albatros_motor_board::parseMotorGetTemperatureResponse(const CmdMsg& res,
+                                                            int16_t* temp0,
+                                                            int16_t* temp1,
+                                                            int16_t* temp2,
+                                                            int16_t* temp3)
 {
   CmdId id;
   CmdPayload payload;
@@ -762,7 +785,7 @@ bool albatros_motorboard::parseMotorGetTemperatureResponse(const CmdMsg& res,
  * @param req request to compose
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseMotorGetIcurrentRequest(CmdMsg* req)
+bool albatros_motor_board::parseMotorGetIcurrentRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[MOTOR][MOTOR_GET_ICURRENT];
   const CmdChecksum checksum = id;
@@ -786,9 +809,11 @@ bool albatros_motorboard::parseMotorGetIcurrentRequest(CmdMsg* req)
  *      is correct)
  */
 // TODO: Check the type of arguments, they should be int16_t?
-bool albatros_motorboard::parseMotorGetIcurrentResponse(const CmdMsg& res,
-                                               uint16_t* icurr0, uint16_t* icurr1,
-                                               uint16_t* icurr2, uint16_t* icurr3)
+bool albatros_motor_board::parseMotorGetIcurrentResponse(const CmdMsg& res,
+                                                         uint16_t* icurr0,
+                                                         uint16_t* icurr1,
+                                                         uint16_t* icurr2,
+                                                         uint16_t* icurr3)
 {
   CmdId id;
   CmdPayload payload;
@@ -813,7 +838,7 @@ bool albatros_motorboard::parseMotorGetIcurrentResponse(const CmdMsg& res,
  * @param req request to compose
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseMotorGetStatusRequest(CmdMsg* req)
+bool albatros_motor_board::parseMotorGetStatusRequest(CmdMsg* req)
 {
   const CmdId id = MODULE_CMD_ID[MOTOR][MOTOR_GET_STATUS];
   const CmdChecksum checksum = id;
@@ -841,9 +866,11 @@ bool albatros_motorboard::parseMotorGetStatusRequest(CmdMsg* req)
  * exceeds a security threshold). When the number of stops reaches a fixed (but
  * unknown) value, the motor halts (it does not respond to commands anymore).
  */
-bool albatros_motorboard::parseMotorGetStatusResponse(const CmdMsg& res,
-                                             uint8_t* stat0, uint8_t* stat1,
-                                             uint8_t* stat2, uint8_t* stat3)
+bool albatros_motor_board::parseMotorGetStatusResponse(const CmdMsg& res,
+                                                       uint8_t* stat0,
+                                                       uint8_t* stat1,
+                                                       uint8_t* stat2,
+                                                       uint8_t* stat3)
 {
   CmdId id;
   CmdPayload payload;
@@ -878,7 +905,8 @@ bool albatros_motorboard::parseMotorGetStatusResponse(const CmdMsg& res,
  * @param motor number of the motor
  * @return true on success, false on errors composing the request
  */
-bool albatros_motorboard::parseMotorctrlGetConstantsRequest(CmdMsg* req, uint8_t motor)
+bool albatros_motor_board::parseMotorctrlGetConstantsRequest(CmdMsg* req,
+                                                             uint8_t motor)
 {
   const CmdId id = MODULE_CMD_ID[MOTORCTRL][MOTORCTRL_GET_CONSTANTS];
   const CmdChecksum checksum = id + motor;
@@ -927,10 +955,12 @@ bool albatros_motorboard::parseMotorctrlGetConstantsRequest(CmdMsg* req, uint8_t
  *   int16_t q = f / 32768.0; // 2^15 = 32768 and implicit rounding to int
  * @endcode
  */
-bool albatros_motorboard::parseMotorctrlGetConstantsResponse(const CmdMsg& res,
-                                                    uint8_t* motor,
-                                                    bool* active, int16_t* kp_q15,
-                                                    int16_t* ki_q15, int16_t* kd_q15)
+bool albatros_motor_board::parseMotorctrlGetConstantsResponse(const CmdMsg& res,
+                                                              uint8_t* motor,
+                                                              bool* active,
+                                                              int16_t* kp_q15,
+                                                              int16_t* ki_q15,
+                                                              int16_t* kd_q15)
 {
   CmdId id;
   CmdPayload payload;
@@ -967,9 +997,12 @@ bool albatros_motorboard::parseMotorctrlGetConstantsResponse(const CmdMsg& res,
  *
  * For an explanation of the Q15 format see parseMotorctrlGetConstantsResponse()
  */
-bool albatros_motorboard::parseMotorctrlSetConstantsRequest(CmdMsg* req, uint8_t motor,
-                                                   bool active, int16_t kp_q15,
-                                                   int16_t ki_q15, int16_t kd_q15)
+bool albatros_motor_board::parseMotorctrlSetConstantsRequest(CmdMsg* req,
+                                                             uint8_t motor,
+                                                             bool active,
+                                                             int16_t kp_q15,
+                                                             int16_t ki_q15,
+                                                             int16_t kd_q15)
 {
   const CmdId id = MODULE_CMD_ID[MOTORCTRL][MOTORCTRL_SET_CONSTANTS];
   unsigned int plsb = kp_q15 & 0xFF;        // proportional least significant byte
@@ -1003,9 +1036,12 @@ bool albatros_motorboard::parseMotorctrlSetConstantsRequest(CmdMsg* req, uint8_t
  *
  * For an explanation of the Q15 format see parseMotorctrlGetConstantsResponse()
  */
-bool albatros_motorboard::parseMotorctrlSetConstantsResponse(const CmdMsg& res, uint8_t* motor,
-                                                    bool* active, int16_t* kp_q15,
-                                                    int16_t* ki_q15, int16_t* kd_q15)
+bool albatros_motor_board::parseMotorctrlSetConstantsResponse(const CmdMsg& res,
+                                                              uint8_t* motor,
+                                                              bool* active,
+                                                              int16_t* kp_q15,
+                                                              int16_t* ki_q15,
+                                                              int16_t* kd_q15)
 {
   CmdId id;
   CmdPayload payload;
@@ -1043,7 +1079,8 @@ bool albatros_motorboard::parseMotorctrlSetConstantsResponse(const CmdMsg& res, 
  *
  * No check is done to assert the validity of the sensor number
  */
-bool albatros_motorboard::parseSensorGetDeviceConfigRequest(CmdMsg* req, uint8_t sensor)
+bool albatros_motor_board::parseSensorGetDeviceConfigRequest(CmdMsg* req,
+                                                             uint8_t sensor)
 {
   const CmdId id = MODULE_CMD_ID[SENSOR][SENSOR_GET_DEVICE_CONFIG];
   const CmdChecksum checksum = id + sensor;
@@ -1069,10 +1106,13 @@ bool albatros_motorboard::parseSensorGetDeviceConfigRequest(CmdMsg* req, uint8_t
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseSensorGetDeviceConfigResponse(const CmdMsg& res,
-                                        uint8_t* sensor, uint8_t* type,
-                                        int8_t* unit_res, uint8_t* ADCbits,
-                                        int16_t* min, int16_t* max)
+bool albatros_motor_board::parseSensorGetDeviceConfigResponse(const CmdMsg& res,
+                                                              uint8_t* sensor,
+                                                              uint8_t* type,
+                                                              int8_t* unit_res,
+                                                              uint8_t* ADCbits,
+                                                              int16_t* min,
+                                                              int16_t* max)
 {
   CmdId id;
   CmdPayload payload;
@@ -1103,7 +1143,8 @@ bool albatros_motorboard::parseSensorGetDeviceConfigResponse(const CmdMsg& res,
  *
  * No check is done to assert the validity of the sensor number
  */
-bool albatros_motorboard::parseSensorGetOffsetRequest(CmdMsg* req, uint8_t sensor)
+bool albatros_motor_board::parseSensorGetOffsetRequest(CmdMsg* req,
+                                                       uint8_t sensor)
 {
   const CmdId id = MODULE_CMD_ID[SENSOR][SENSOR_GET_OFFSET];
   const CmdChecksum checksum = id + sensor;
@@ -1124,8 +1165,9 @@ bool albatros_motorboard::parseSensorGetOffsetRequest(CmdMsg* req, uint8_t senso
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseSensorGetOffsetResponse(const CmdMsg& res,
-                                              uint8_t* sensor, int16_t* offset)
+bool albatros_motor_board::parseSensorGetOffsetResponse(const CmdMsg& res,
+                                                        uint8_t* sensor,
+                                                        int16_t* offset)
 {
   CmdId id;
   CmdPayload payload;
@@ -1152,8 +1194,9 @@ bool albatros_motorboard::parseSensorGetOffsetResponse(const CmdMsg& res,
  *
  * No check is done to assert the validity of the sensor number
  */
-bool albatros_motorboard::parseSensorSetOffsetRequest(CmdMsg* req,
-                                             uint8_t sensor, int16_t offset)
+bool albatros_motor_board::parseSensorSetOffsetRequest(CmdMsg* req,
+                                                       uint8_t sensor,
+                                                       int16_t offset)
 {
   const CmdId id = MODULE_CMD_ID[SENSOR][SENSOR_SET_OFFSET];
   const unsigned int off_msb = (offset >> 8) & 0xFF; // offset most significant byte
@@ -1176,8 +1219,9 @@ bool albatros_motorboard::parseSensorSetOffsetRequest(CmdMsg* req,
  *      (output values are changed only when the command identifier in response
  *      is correct)
  */
-bool albatros_motorboard::parseSensorSetOffsetResponse(const CmdMsg& res,
-                                              uint8_t* sensor, int16_t* offset)
+bool albatros_motor_board::parseSensorSetOffsetResponse(const CmdMsg& res,
+                                                        uint8_t* sensor,
+                                                        int16_t* offset)
 {
   CmdId id;
   CmdPayload payload;
@@ -1203,7 +1247,8 @@ bool albatros_motorboard::parseSensorSetOffsetResponse(const CmdMsg& res,
  *
  * No check is done to assert the validity of the sensor number
  */
-bool albatros_motorboard::parseSensorGetValueRequest(CmdMsg* req, uint8_t sensor)
+bool albatros_motor_board::parseSensorGetValueRequest(CmdMsg* req,
+                                                      uint8_t sensor)
 {
   const CmdId id = MODULE_CMD_ID[SENSOR][SENSOR_GET_VALUE];
   const CmdChecksum checksum = id + sensor;
@@ -1230,8 +1275,10 @@ bool albatros_motorboard::parseSensorGetValueRequest(CmdMsg* req, uint8_t sensor
  * The meaning of the sampled value may also depend on sensor's offset from
  * parseSensorGetOffsetResponse().
  */
-bool albatros_motorboard::parseSensorGetValueResponse(const CmdMsg& res, uint8_t* sensor,
-                                 int16_t* sensor_val, int32_t* adc_val)
+bool albatros_motor_board::parseSensorGetValueResponse(const CmdMsg& res,
+                                                       uint8_t* sensor,
+                                                       int16_t* sensor_val,
+                                                       int32_t* adc_val)
 {
   CmdId id;
   CmdPayload payload;

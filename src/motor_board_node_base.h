@@ -1,5 +1,5 @@
-/** @file
- *
+/**
+ * @file
  * @brief ROS driver for Albatros motor board (presentation).
  *
  * This is a ROS driver for a motor board provided by Albatros.
@@ -10,18 +10,18 @@
  * @par Advertises
  *
  * - @b speeds_rpm topic (srv_msgs/MotorLevels)
- *   current motor speeds in rpm
+ *   current motor speeds in rpm.
  *
- * - @b status topic (albatros_motorboard/MotorStatus)
- *   motor error counts
+ * - @b status topic (albatros_motor_board/MotorStatus)
+ *   motor error counts.
  *
  * - @b pressure topic (srv_msgs/Pressure)
- *   pressure sensor sample
+ *   pressure sensor sample.
  *
  * @par Subscribes
  *
  * - @b speeds_pc (srv_msgs/MotorLevels)
- *   desired speeds in percentage of device nominal speed
+ *   desired speeds in percentage of device nominal speed.
  *
  * @par Parameters
  *
@@ -35,18 +35,18 @@
  * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID derivative constant (double default 0.0)
  */
 
-#ifndef MOTORBOARD_NODE_BASE_H
-#define MOTORBOARD_NODE_BASE_H
+#ifndef MOTOR_BOARD_NODE_BASE_H
+#define MOTOR_BOARD_NODE_BASE_H
 
 #include <ros/ros.h>
 #include <dynamic_reconfigure/server.h>
 #include <srv_msgs/Pressure.h>
 #include <srv_msgs/MotorLevels.h>
-#include "albatros_motorboard/MotorStatus.h"
-#include "albatros_motorboard/MotorBoardDynParamsConfig.h"
-#include "albatros_motorboard/motorboardctrl.h"
+#include "albatros_motor_board/MotorStatus.h"
+#include "albatros_motor_board/MotorBoardDynParamsConfig.h"
+#include "albatros_motor_board/motorboardctrl.h"
 
-namespace albatros_motorboard
+namespace albatros_motor_board
 {
 
 class MotorBoardNodeBase
@@ -165,4 +165,4 @@ private:
 
 } // namespace
 
-#endif // MOTORBOARD_NODE_BASE_H
+#endif // MOTOR_BOARD_NODE_BASE_H

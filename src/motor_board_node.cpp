@@ -1,5 +1,5 @@
-/** @file
- *
+/**
+ * @file
  * @brief ROS driver for Albatros motor board (node version).
  *
  * This is a ROS driver for a motor board provided by Albatros.
@@ -12,7 +12,7 @@
  * - @b speeds_rpm topic (srv_msgs/MotorLevels)
  *   current motor speeds in rpm
  *
- * - @b status topic (albatros_motorboard/MotorStatus)
+ * - @b status topic (albatros_motor_board/MotorStatus)
  *   motor error counts
  *
  * - @b pressure topic (srv_msgs/Pressure)
@@ -35,16 +35,16 @@
  * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID derivative constant (double default 0.0)
  */
 
-#include "motorboard_node_base.h"
+#include "motor_board_node_base.h"
 
 int main(int argc, char **argv)
 {
   // ROS initialization
-  ros::init(argc, argv, "motorboard_node");
+  ros::init(argc, argv, "motor_board_node");
 
-  ros::NodeHandle node;
+  ros::NodeHandle node("motorboard");
   ros::NodeHandle priv("~");
-  albatros_motorboard::MotorBoardNodeBase mb_node(node,priv);
+  albatros_motor_board::MotorBoardNodeBase mb_node(node,priv);
 
   // advertise output topics
   mb_node.advertiseSensorTopics();

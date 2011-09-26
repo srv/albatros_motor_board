@@ -1,5 +1,5 @@
 <launch>
-  <node pkg="albatros_motorboard" type="motorboard_node" name="motorboard_node" output="screen">
+  <node pkg="albatros_motor_board" type="motor_board_node" name="motor_board_node" output="screen">
 
     <param name="serial_port" value="/dev/ttyS0" type="string" />
 
@@ -37,7 +37,7 @@
     <param name="downward_right_invert" value="true" type="bool" />
 
   </node>
-  
+
   <node pkg="dynamic_reconfigure" type="reconfigure_gui" output="screen" />
 
 </launch>
