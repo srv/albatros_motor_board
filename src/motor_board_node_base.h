@@ -132,22 +132,22 @@ private:
   void dynReconfigureParams(MotorBoardDynParamsConfig& params,
                             uint32_t level);
 
-  void fillMotorSpeeds(const srv_msgs::MotorLevels& m,
-                       MotorBoardCtrl::MotorSpeeds* s);
+  void fillMotorSpeeds(const srv_msgs::MotorLevelsConstPtr& m,
+                       MotorBoardCtrl::MotorSpeeds* s) const;
 
   void fillMotorSpeedsMsg(const MotorBoardCtrl::MotorSpeeds& s,
-                          srv_msgs::MotorLevels* m );
+                          const srv_msgs::MotorLevelsPtr& m ) const;
 
-  void publishPressure();
+  void publishMotorSpeeds();
 
-  void publishSpeeds();
+  void publishMotorStatus();
 
-  void publishStatus();
+  void publishSensorPressure();
 
   void subscriptionCallback(const ros::SingleSubscriberPublisher& ssp,
                             const OutTopic& t);
 
-  void updateSpeedsCallback(const srv_msgs::MotorLevels& msg);
+  void updateSpeedsCallback(const srv_msgs::MotorLevelsConstPtr& msg);
 
 };
 

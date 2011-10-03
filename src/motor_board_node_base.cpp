@@ -334,13 +334,13 @@ void albatros_motor_board::MotorBoardNodeBase::updatePublishRate(const OutTopic&
       switch (t)
       {
         case MOTOR_SPEEDS :
-          cb = boost::bind(&MotorBoardNodeBase::publishSpeeds, this);
+          cb = boost::bind(&MotorBoardNodeBase::publishMotorSpeeds, this);
           break;
         case MOTOR_STATUS :
-          cb = boost::bind(&MotorBoardNodeBase::publishStatus, this);
+          cb = boost::bind(&MotorBoardNodeBase::publishMotorStatus, this);
           break;
         case SENSOR_PRESSURE :
-          cb = boost::bind(&MotorBoardNodeBase::publishPressure, this);
+          cb = boost::bind(&MotorBoardNodeBase::publishSensorPressure, this);
           break;
       }
       publish_timer_[t] = node_.createTimer(ros::Duration(1.0 / rate), cb);
@@ -437,25 +437,25 @@ void albatros_motor_board::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDy
   }
 }
 
-void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeeds(const srv_msgs::MotorLevels& m,
-                                                               MotorBoardCtrl::MotorSpeeds* s)
+void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeeds(const srv_msgs::MotorLevelsConstPtr& m,
+                                                               MotorBoardCtrl::MotorSpeeds* s) const
 {
   (*s)[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
-                                   ? -m.levels[mbctrl_.FORWARD_LEFT]
-                                   : +m.levels[mbctrl_.FORWARD_LEFT];
+                                   ? -m->levels[mbctrl_.FORWARD_LEFT]
+                                   : +m->levels[mbctrl_.FORWARD_LEFT];
   (*s)[mbctrl_.FORWARD_RIGHT]  = (current_params_.forward_right_invert)
-                                   ? -m.levels[mbctrl_.FORWARD_RIGHT]
-                                   : +m.levels[mbctrl_.FORWARD_RIGHT];
+                                   ? -m->levels[mbctrl_.FORWARD_RIGHT]
+                                   : +m->levels[mbctrl_.FORWARD_RIGHT];
   (*s)[mbctrl_.DOWNWARD_LEFT]  = (current_params_.downward_left_invert)
-                                   ? -m.levels[mbctrl_.DOWNWARD_LEFT]
-                                   : +m.levels[mbctrl_.DOWNWARD_LEFT];
+                                   ? -m->levels[mbctrl_.DOWNWARD_LEFT]
+                                   : +m->levels[mbctrl_.DOWNWARD_LEFT];
   (*s)[mbctrl_.DOWNWARD_RIGHT] = (current_params_.downward_right_invert)
-                                   ? -m.levels[mbctrl_.DOWNWARD_RIGHT]
-                                   : +m.levels[mbctrl_.DOWNWARD_RIGHT];
+                                   ? -m->levels[mbctrl_.DOWNWARD_RIGHT]
+                                   : +m->levels[mbctrl_.DOWNWARD_RIGHT];
 }
 
 void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeedsMsg(const MotorBoardCtrl::MotorSpeeds& s,
-                                                                  srv_msgs::MotorLevels* m )
+                                                                  const srv_msgs::MotorLevelsPtr& m ) const
 {
   m->levels[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
                                                ? -s[mbctrl_.FORWARD_LEFT]
@@ -471,7 +471,48 @@ void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeedsMsg(const MotorBoa
                                                : +s[mbctrl_.DOWNWARD_RIGHT];
 }
 
-void albatros_motor_board::MotorBoardNodeBase::publishPressure()
+void albatros_motor_board::MotorBoardNodeBase::publishMotorSpeeds()
+{
+  if (do_publish_[MOTOR_SPEEDS])
+  try
+  {
+    MotorBoardCtrl::MotorSpeeds speeds_rpm;
+    mbctrl_.getSpeeds(&speeds_rpm);
+    ros::Time stamp = ros::Time::now();
+    srv_msgs::MotorLevelsPtr msg(new srv_msgs::MotorLevels());
+    msg->header.stamp = stamp;
+    msg->levels.resize(mbctrl_.NUM_MOTORS);
+    fillMotorSpeedsMsg(speeds_rpm, msg);
+    publisher_[MOTOR_SPEEDS].publish(msg);
+  }
+  catch (std::exception &e)
+  {
+    ROS_ERROR_STREAM("Error getting motor speeds : " << e.what());
+  }
+}
+
+void albatros_motor_board::MotorBoardNodeBase::publishMotorStatus()
+{
+  if (do_publish_[MOTOR_STATUS])
+  try
+  {
+    MotorBoardCtrl::MotorStatus status;
+    mbctrl_.getStatus(&status);
+    ros::Time stamp = ros::Time::now();
+    albatros_motor_board::MotorStatusPtr msg(new albatros_motor_board::MotorStatus());
+    msg->header.stamp = stamp;
+    msg->status.resize(mbctrl_.NUM_MOTORS);
+    for (int i=0; i<mbctrl_.NUM_MOTORS; i++)
+      msg->status[i] = status[i];
+    publisher_[MOTOR_STATUS].publish(msg);
+  }
+  catch (std::exception &e)
+  {
+    ROS_ERROR_STREAM("Error getting motor status : " << e.what());
+  }
+}
+
+void albatros_motor_board::MotorBoardNodeBase::publishSensorPressure()
 {
   if (do_publish_[SENSOR_PRESSURE])
   try
@@ -490,45 +531,6 @@ void albatros_motor_board::MotorBoardNodeBase::publishPressure()
   }
 }
 
-void albatros_motor_board::MotorBoardNodeBase::publishSpeeds()
-{
-  if (do_publish_[MOTOR_SPEEDS])
-  try
-  {
-    ros::Time stamp = ros::Time::now();
-    MotorBoardCtrl::MotorSpeeds speeds_rpm;
-    mbctrl_.getSpeeds(&speeds_rpm);
-    srv_msgs::MotorLevels msg;
-    msg.header.stamp = stamp;
-    fillMotorSpeedsMsg(speeds_rpm, &msg);
-    publisher_[MOTOR_SPEEDS].publish(msg);
-  }
-  catch (std::exception &e)
-  {
-    ROS_ERROR_STREAM("Error getting motor speeds : " << e.what());
-  }
-}
-
-void albatros_motor_board::MotorBoardNodeBase::publishStatus()
-{
-  if (do_publish_[MOTOR_STATUS])
-  try
-  {
-    ros::Time stamp = ros::Time::now();
-    MotorBoardCtrl::MotorStatus status;
-    mbctrl_.getStatus(&status);
-    MotorStatus msg;
-    msg.header.stamp = stamp;
-    for (int i=0; i<mbctrl_.NUM_MOTORS; i++)
-      msg.status[i] = status[i];
-    publisher_[MOTOR_STATUS].publish(msg);
-  }
-  catch (std::exception &e)
-  {
-    ROS_ERROR_STREAM("Error getting motor status : " << e.what());
-  }
-}
-
 void albatros_motor_board::MotorBoardNodeBase::subscriptionCallback(const ros::SingleSubscriberPublisher& ssp,
                                                                     const OutTopic& t)
 {
@@ -538,9 +540,9 @@ void albatros_motor_board::MotorBoardNodeBase::subscriptionCallback(const ros::S
     do_publish_[t] = true;
 }
 
-void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_msgs::MotorLevels& msg)
+void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_msgs::MotorLevelsConstPtr& msg)
 {
-  const int num_motors = msg.levels.size();
+  const int num_motors = msg->levels.size();
   if ( num_motors != mbctrl_.NUM_MOTORS )
   {
     ROS_ERROR_STREAM("Wrong number of motors (" << num_motors
