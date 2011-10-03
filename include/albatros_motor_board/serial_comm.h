@@ -5,8 +5,8 @@
  *
  *
  *****************************************************************************/
-#ifndef SERIALCOMM_H
-#define SERIALCOMM_H
+#ifndef SERIAL_COMM_H
+#define SERIAL_COMM_H
 
 #include <string>
 #include <termios.h>    // brings in Unix serial API
@@ -76,4 +76,4 @@ private:
 
 } // namespace serial
 
-#endif // SERIALCOMM_H
+#endif // SERIAL_COMM_H

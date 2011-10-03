@@ -15,7 +15,7 @@
  */
 
 
-#include "motorboardctrl.h"
+#include "motor_board_ctrl.h"
 #include <cstring>
 
 /**

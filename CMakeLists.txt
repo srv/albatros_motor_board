@@ -9,6 +9,9 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
 #set(ROS_BUILD_TYPE RelWithDebInfo)
 
+# Default compile flags are "-W -Wall -Wno-unused-parameter -fno-strict-aliasing" 
+# Uncomment the following line to turn on higher warnings
+# set(ROS_COMPILE_FLAGS "-W -Wall -Wextra -pedantic")
 rosbuild_init()
 
 #set the default path for built executables to the "bin" directory
@@ -34,14 +37,14 @@ gencfg()
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
-add_subdirectory(src/motorboardctrl)
+add_subdirectory(src/motor_board_ctrl)
 
 rosbuild_add_executable(motor_board_node
                          src/motor_board_node.cpp
                          src/motor_board_node_base.cpp)
-target_link_libraries(motor_board_node motorboardctrl)
+target_link_libraries(motor_board_node motor_board_ctrl)
 
 rosbuild_add_library(motor_board_nodelet
                       src/motor_board_nodelet.cpp
                       src/motor_board_node_base.cpp)
-target_link_libraries(motor_board_node motorboardctrl)
+target_link_libraries(motor_board_node motor_board_ctrl)

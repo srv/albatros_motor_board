@@ -44,7 +44,7 @@
 #include <srv_msgs/MotorLevels.h>
 #include "albatros_motor_board/MotorStatus.h"
 #include "albatros_motor_board/MotorBoardDynParamsConfig.h"
-#include "albatros_motor_board/motorboardctrl.h"
+#include "albatros_motor_board/motor_board_ctrl.h"
 
 namespace albatros_motor_board
 {

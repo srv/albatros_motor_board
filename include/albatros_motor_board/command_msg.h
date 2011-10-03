@@ -39,8 +39,8 @@
  * They are just translated to their hexadecimal representation in characters.
  */
 
-#ifndef COMMANDMSG_H
-#define COMMANDMSG_H
+#ifndef COMMAND_MSG_H
+#define COMMAND_MSG_H
 
 #include <string>
 #include <stdint.h>
@@ -345,4 +345,4 @@ bool parseSensorGetValueResponse(const CmdMsg& res, uint8_t* sensor,
 
 } // namespace albatros_motor_board
 
-#endif // COMMANDMSG_H
+#endif // COMMAND_MSG_H
