@@ -472,7 +472,7 @@ void albatros_motor_board::MotorBoardCtrl::getSensorValue(const Sensor sensor_id
  * @return reference to the output stream
  */
 std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
-                                              const MotorBoardCtrl::Motor& m)
+                                               const MotorBoardCtrl::Motor& m)
 {
   return ostr << int(m);
 }
@@ -484,7 +484,7 @@ std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
  * @return reference to the output stream
  */
 std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
-                                              const MotorBoardCtrl::Sensor& s)
+                                               const MotorBoardCtrl::Sensor& s)
 {
   return ostr << int(s);
 }
@@ -496,7 +496,7 @@ std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
  * @return reference to the output stream
  */
 std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
-                                              const MotorBoardCtrl::PIDConstant& k)
+                                               const MotorBoardCtrl::PIDConstant& k)
 {
   return ostr << int(k);
 }
