@@ -38,6 +38,7 @@ gencfg()
 #target_link_libraries(example ${PROJECT_NAME})
 
 add_subdirectory(src/motor_board_ctrl)
+add_subdirectory(src/motor_board_console)
 
 rosbuild_add_executable(motor_board_node
                          src/motor_board_node.cpp
