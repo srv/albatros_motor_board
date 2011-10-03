@@ -42,7 +42,11 @@ albatros_motor_board::MotorBoardNodeBase::MotorBoardNodeBase(const ros::NodeHand
                                                              const ros::NodeHandle& priv)
 : node_(node)
 , priv_(priv)
-{}
+{
+  do_publish_[MOTOR_SPEEDS] = false;
+  do_publish_[MOTOR_STATUS] = false;
+  do_publish_[SENSOR_PRESSURE] = false;
+}
 
 void albatros_motor_board::MotorBoardNodeBase::advertiseMotorTopics()
 {
@@ -311,7 +315,7 @@ void albatros_motor_board::MotorBoardNodeBase::updatePublishRate(const OutTopic&
   {
     if (rate > 0.0)
     {
-      ROS_INFO_STREAM("Reconfiguring rate for topic " << topic << " to : " << rate);
+      ROS_INFO_STREAM("Updating rate for topic " << topic << " to : " << rate);
       publish_timer_[t].setPeriod(ros::Duration(1.0/rate));
       publish_timer_[t].start();
     }
