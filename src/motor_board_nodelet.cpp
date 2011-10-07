@@ -71,7 +71,7 @@ albatros_motor_board::MotorBoardNodelet::MotorBoardNodelet()
  */
 void albatros_motor_board::MotorBoardNodelet::onInit()
 {
-  ros::NodeHandle node(getNodeHandle(),"motorboard");
+  ros::NodeHandle node(getNodeHandle(),"motor_board");
   ros::NodeHandle priv(getPrivateNodeHandle());
   mb_node_.reset(new MotorBoardNodeBase(node,priv));
 
