@@ -44,7 +44,7 @@
 #include <srv_msgs/MotorLevels.h>
 #include "albatros_motor_board/MotorStatus.h"
 #include "albatros_motor_board/MotorBoardDynParamsConfig.h"
-#include "albatros_motor_board/motorboardctrl.h"
+#include "albatros_motor_board/motor_board_ctrl.h"
 
 namespace albatros_motor_board
 {
@@ -67,24 +67,20 @@ public:
 
 private:
 
+  enum OutTopic {MOTOR_SPEEDS, MOTOR_STATUS, SENSOR_PRESSURE};
+  static const int NUM_OUT_TOPICS = 3;
+
   ros::NodeHandle node_;
   ros::NodeHandle priv_;
   ros::Subscriber subs_speeds_;
-  ros::Publisher publ_status_;
-  ros::Publisher publ_speeds_;
-  ros::Publisher publ_pressure_;
+  ros::Publisher publisher_[NUM_OUT_TOPICS];
 
-  int num_speeds_subscribers_;
-  int num_status_subscribers_;
-  int num_pressure_subscribers_;
-  bool publish_speeds_;
-  bool publish_status_;
-  bool publish_pressure_;
+  bool do_publish_[NUM_OUT_TOPICS];
 
   dynamic_reconfigure::Server<MotorBoardDynParamsConfig> dyn_params_srv_;
   MotorBoardDynParamsConfig current_params_;
 
-  ros::Timer timed_caller_;
+  ros::Timer publish_timer_[NUM_OUT_TOPICS];
 
   MotorBoardCtrl mbctrl_;
   bool mbctrl_ready_;
@@ -96,6 +92,8 @@ private:
 
   void getSensorOffsetParam(const MotorBoardCtrl::Sensor& s,
                             int* offset);
+
+  void getPublishRateParam(const OutTopic& t, double* rate);
 
   template <typename T>
   static bool updateParam(T* old_val, const T& new_val);
@@ -110,7 +108,8 @@ private:
   bool updateSensorOffsetParam(const MotorBoardDynParamsConfig& params,
                                const MotorBoardCtrl::Sensor& s);
 
-  bool updateTimerRateParam(const MotorBoardDynParamsConfig& params);
+  bool updatePublishRateParam(const MotorBoardDynParamsConfig& params,
+                              const OutTopic& t);
 
   bool updateInvertSpeedParams(const MotorBoardDynParamsConfig& params);
 
@@ -122,7 +121,7 @@ private:
 
   void updateSensorOffset(MotorBoardCtrl::Sensor s);
 
-  void updateTimerRate();
+  void updatePublishRate(const OutTopic& t);
 
   void checkVersion();
 
@@ -133,33 +132,22 @@ private:
   void dynReconfigureParams(MotorBoardDynParamsConfig& params,
                             uint32_t level);
 
-  void publishPressure();
+  void fillMotorSpeeds(const srv_msgs::MotorLevelsConstPtr& m,
+                       MotorBoardCtrl::MotorSpeeds* s) const;
 
   void fillMotorSpeedsMsg(const MotorBoardCtrl::MotorSpeeds& s,
-                          srv_msgs::MotorLevels* m );
+                          const srv_msgs::MotorLevelsPtr& m ) const;
 
-  void publishSpeeds();
+  void publishMotorSpeeds();
 
-  void publishStatus();
+  void publishMotorStatus();
 
-  void timedPublishCallback();
+  void publishSensorPressure();
 
-  void fillMotorSpeeds(const srv_msgs::MotorLevels& m,
-                       MotorBoardCtrl::MotorSpeeds* s);
+  void subscriptionCallback(const ros::SingleSubscriberPublisher& ssp,
+                            const OutTopic& t);
 
-  void updateSpeedsCallback(const srv_msgs::MotorLevels& msg);
-
-  void speedsSubscribedCallback(const ros::SingleSubscriberPublisher& ssp);
-
-  void speedsUnsubscribedCallback(const ros::SingleSubscriberPublisher& ssp);
-
-  void statusSubscribedCallback(const ros::SingleSubscriberPublisher& ssp);
-
-  void statusUnsubscribedCallback(const ros::SingleSubscriberPublisher& ssp);
-
-  void pressureSubscribedCallback(const ros::SingleSubscriberPublisher& ssp);
-
-  void pressureUnsubscribedCallback(const ros::SingleSubscriberPublisher& ssp);
+  void updateSpeedsCallback(const srv_msgs::MotorLevelsConstPtr& msg);
 
 };
 

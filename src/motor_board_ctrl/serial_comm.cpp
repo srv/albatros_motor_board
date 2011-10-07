@@ -7,7 +7,7 @@
  		Establish Serial communication with device.
  *****************************************************************************/
 
-#include "serialcomm.h"
+#include "serial_comm.h"
 #include <cerrno>
 #include <cstdlib>
 #include <fcntl.h>

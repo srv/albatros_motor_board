@@ -16,7 +16,7 @@
  * but may be implementation dependent and hence not portable.
  */
 
-#include "commandmsg.h"
+#include "command_msg.h"
 #include <cstdio>
 #include <cstring>
 

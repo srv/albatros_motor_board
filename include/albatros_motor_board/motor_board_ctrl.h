@@ -14,14 +14,14 @@
  * Command's format and syntax is addressed by the commandmsg module.
  */
 
-#ifndef MOTORBOARDCTRL_H
-#define MOTORBOARDCTRL_H
+#ifndef MOTOR_BOARD_CTRL_H
+#define MOTOR_BOARD_CTRL_H
 
 #include <string>
 #include <stdexcept>
 #include <ostream>
-#include "serialcomm.h"
-#include "commandmsg.h"
+#include "serial_comm.h"
+#include "command_msg.h"
 
 namespace albatros_motor_board
 {
@@ -123,4 +123,4 @@ std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::PIDConstant& 
 
 } // namespace
 
-#endif
+#endif // MOTOR_BOARD_CTRL_H
