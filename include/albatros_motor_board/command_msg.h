@@ -1,5 +1,5 @@
 /**
- * @file command_msg.h
+ * @file
  * @brief Motor board modules and command message parsers presentation
  * @author Joan Pau Beltran
  * @date 05/01/2011

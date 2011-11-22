@@ -1,5 +1,5 @@
 /**
- * @file motor_board_ctrl.h
+ * @file
  * @brief Motor board controller class presentation
  * @author Joan Pau Beltran
  * @date 2011-01-03

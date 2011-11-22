@@ -9,19 +9,19 @@
  *
  * @par Advertises
  *
- * - @b speeds_rpm topic (srv_msgs/MotorLevels)
- *   current motor speeds in rpm
+ * - @b speeds_rpm (srv_msgs/MotorLevels)
+ *   Current motor speeds in rpm.
  *
  * - @b status topic (albatros_motor_board/MotorStatus)
- *   motor error counts
+ *   Motor error counts.
  *
  * - @b pressure topic (srv_msgs/Pressure)
- *   pressure sensor sample
+ *   Pressure sensor sample.
  *
  * @par Subscribes
  *
  * - @b speeds_pc (srv_msgs/MotorLevels)
- *   desired speeds in percentage of device nominal speed
+ *   Desired speeds in percentage of device nominal speed.
  *
  * @par Parameters
  *

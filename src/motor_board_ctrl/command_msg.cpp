@@ -1,5 +1,5 @@
 /**
- * @file command_msg.cpp
+ * @file
  * @brief Motor board command message parsers implementation
  * @author Joan Pau Beltran
  * @date 05/01/2011

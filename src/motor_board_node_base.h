@@ -9,19 +9,19 @@
  *
  * @par Advertises
  *
- * - @b speeds_rpm topic (srv_msgs/MotorLevels)
- *   current motor speeds in rpm.
+ * - @b speeds_rpm (srv_msgs/MotorLevels)
+ *   Current motor speeds in rpm.
  *
  * - @b status topic (albatros_motor_board/MotorStatus)
- *   motor error counts.
+ *   Motor error counts.
  *
  * - @b pressure topic (srv_msgs/Pressure)
- *   pressure sensor sample.
+ *   Pressure sensor sample.
  *
  * @par Subscribes
  *
  * - @b speeds_pc (srv_msgs/MotorLevels)
- *   desired speeds in percentage of device nominal speed.
+ *   Desired speeds in percentage of device nominal speed.
  *
  * @par Parameters
  *
@@ -38,6 +38,7 @@
  * - \b "~(forward|downward)_(left|right)_accel"  : \b [int]    front/down left/right acceleration (%/ds). min: 0, default: 5, max: 100
  * - \b "~(forward|downward)_(left|right)_invert" : \b [bool]   front/down left/right speed inversion. min: False, default: False, max: True
  */
+
 
 #ifndef MOTOR_BOARD_NODE_BASE_H
 #define MOTOR_BOARD_NODE_BASE_H

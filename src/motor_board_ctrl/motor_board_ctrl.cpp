@@ -1,5 +1,5 @@
 /**
- * @file motor_board_ctrl.cpp
+ * @file
  * @brief Motor board controller class implementation
  * @author Joan Pau Beltran
  * @date 2011-01-03
