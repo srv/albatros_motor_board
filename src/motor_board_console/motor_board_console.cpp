@@ -255,7 +255,7 @@ void getMotorConfigHandler(simple_shell::CmdCall cmd_call)
     return;
   }
   motor_num = aux;
-  cout << "Requested configuration of motor " << motor_num << endl;
+  cout << "Requested configuration of motor " << static_cast<unsigned int>(motor_num) << endl;
   cout << "Querying get motor configuration command..." << endl;
   if(!albatros_motor_board::parseMotorGetDeviceConfigRequest(&request, motor_num))
     throw(runtime_error( "Error parsing request : " + string(request) ) );
@@ -266,10 +266,10 @@ void getMotorConfigHandler(simple_shell::CmdCall cmd_call)
                                                     &max_temp, &rated_rpm,
                                                     &no_load_rpm, &rated_ma))
     throw(runtime_error( "Error parsing response : " + string(response) ) );
-  cout << "Motor "<< motor_num << " maximum temperature (ºC) : " << max_temp << endl;
-  cout << "Motor "<< motor_num << " rated speed (rpm) : " << rated_rpm << endl;
-  cout << "Motor "<< motor_num << " no load speed (rpm) : " << no_load_rpm << endl;
-  cout << "Motor "<< motor_num << " rated intensity (mA) : " << rated_ma << endl;
+  cout << "Motor "<< static_cast<unsigned int>(motor_num) << " maximum temperature (ºC) : " << max_temp << endl;
+  cout << "Motor "<< static_cast<unsigned int>(motor_num) << " rated speed (rpm) : " << rated_rpm << endl;
+  cout << "Motor "<< static_cast<unsigned int>(motor_num) << " no load speed (rpm) : " << no_load_rpm << endl;
+  cout << "Motor "<< static_cast<unsigned int>(motor_num) << " rated intensity (mA) : " << rated_ma << endl;
 }
 
 void getSpeedsHandler(simple_shell::CmdCall cmd_call)
@@ -426,7 +426,7 @@ void getMotorctrlHandler(simple_shell::CmdCall cmd_call)
     return;
   }
   motor_num = aux;
-  cout << "Requested motor " << motor_num << " control settings" << endl;
+  cout << "Requested motor " << static_cast<unsigned int>(motor_num) << " control settings" << endl;
   cout << "Querying motor control settings command..." << endl;
   if(!albatros_motor_board::parseMotorctrlGetConstantsRequest(&request, motor_num))
     throw(runtime_error( "Error parsing request : " + string(request) ) );
@@ -436,10 +436,10 @@ void getMotorctrlHandler(simple_shell::CmdCall cmd_call)
   if(!albatros_motor_board::parseMotorctrlGetConstantsResponse(response,&motor_num,
                                                      &active, &Kvec[0], &Kvec[1], &Kvec[2]))
     throw(runtime_error( "Error parsing response : " + string(response) ) );
- cout << "Motor "<< motor_num << " control state : " << active << endl;
- cout << "Motor "<< motor_num << " Kp (Q15) : " << Kvec[0] << "( " << Kvec[0]/32768.0 << " )" << endl;
- cout << "Motor "<< motor_num << " Ki (Q15) : " << Kvec[1] << "( " << Kvec[1]/32768.0 << " )" << endl;
- cout << "Motor "<< motor_num << " Kd (Q15) : " << Kvec[2] << "( " << Kvec[2]/32768.0 << " )" << endl;
+ cout << "Motor "<< static_cast<unsigned int>(motor_num) << " control state : " << active << endl;
+ cout << "Motor "<< static_cast<unsigned int>(motor_num) << " Kp (Q15) : " << Kvec[0] << "( " << Kvec[0]/32768.0 << " )" << endl;
+ cout << "Motor "<< static_cast<unsigned int>(motor_num) << " Ki (Q15) : " << Kvec[1] << "( " << Kvec[1]/32768.0 << " )" << endl;
+ cout << "Motor "<< static_cast<unsigned int>(motor_num) << " Kd (Q15) : " << Kvec[2] << "( " << Kvec[2]/32768.0 << " )" << endl;
 }
 
 void setMotorctrlHandler(simple_shell::CmdCall cmd_call)
@@ -479,7 +479,7 @@ void setMotorctrlHandler(simple_shell::CmdCall cmd_call)
       return;
     }
   }
-  cout << "Requested motor " << motor_num << " control settings are " << active << " " << Kvec[0] << " " << Kvec[1] << " " << Kvec[2] << endl;
+  cout << "Requested motor " << static_cast<unsigned int>(motor_num) << " control settings are " << active << " " << Kvec[0] << " " << Kvec[1] << " " << Kvec[2] << endl;
   cout << "Querying motor control settings command..." << endl;
   if(!albatros_motor_board::parseMotorctrlSetConstantsRequest(&request, motor_num, active,
                                                     Kvec[0], Kvec[1], Kvec[2]))
@@ -490,10 +490,10 @@ void setMotorctrlHandler(simple_shell::CmdCall cmd_call)
   if(!albatros_motor_board::parseMotorctrlSetConstantsResponse(response,&motor_num,
                                                      &active, &Kvec[0], &Kvec[1], &Kvec[2]))
     throw(runtime_error( "Error parsing response : " + string(response) ) );
-  cout << "Motor "<< motor_num << " control state : " << active << endl;
-  cout << "Motor "<< motor_num << " Kp (Q15) : " << Kvec[0] << endl;
-  cout << "Motor "<< motor_num << " Ki (Q15) : " << Kvec[1] << endl;
-  cout << "Motor "<< motor_num << " Kd (Q15) : " << Kvec[2] << endl;
+  cout << "Motor "<< static_cast<unsigned int>(motor_num) << " control state : " << active << endl;
+  cout << "Motor "<< static_cast<unsigned int>(motor_num) << " Kp (Q15) : " << Kvec[0] << endl;
+  cout << "Motor "<< static_cast<unsigned int>(motor_num) << " Ki (Q15) : " << Kvec[1] << endl;
+  cout << "Motor "<< static_cast<unsigned int>(motor_num) << " Kd (Q15) : " << Kvec[2] << endl;
 }
 
 void getSensorConfigHandler(simple_shell::CmdCall cmd_call)
@@ -516,7 +516,7 @@ void getSensorConfigHandler(simple_shell::CmdCall cmd_call)
     return;
   }
   sensor_num = aux;
-  cout << "Requested configuration of sensor " << sensor_num << endl;
+  cout << "Requested configuration of sensor " << static_cast<unsigned int>(sensor_num) << endl;
   cout << "Querying get sensor configuration command..." << endl;
   if(!albatros_motor_board::parseSensorGetDeviceConfigRequest(&request, sensor_num))
     throw(runtime_error( "Error parsing request : " + string(request) ) );
@@ -527,11 +527,11 @@ void getSensorConfigHandler(simple_shell::CmdCall cmd_call)
                                                     &type, &resolution,
                                                     &ADCbits, &min, &max))
     throw(runtime_error( "Error parsing response : " + string(response) ) );
- cout << "Sensor "<< sensor_num << " type : " << static_cast<unsigned int>(type) << endl;
- cout << "Sensor "<< sensor_num << " resolution : " << static_cast<int>(resolution) << endl;
- cout << "Sensor "<< sensor_num << " ADCbits : " << static_cast<unsigned int>(ADCbits) << endl;
- cout << "Sensor "<< sensor_num << " min : " << min << endl;
- cout << "Sensor "<< sensor_num << " max : " << max << endl;
+ cout << "Sensor "<< static_cast<unsigned int>(sensor_num) << " type : " << static_cast<unsigned int>(type) << endl;
+ cout << "Sensor "<< static_cast<unsigned int>(sensor_num) << " resolution : " << static_cast<int>(resolution) << endl;
+ cout << "Sensor "<< static_cast<unsigned int>(sensor_num) << " ADCbits : " << static_cast<unsigned int>(ADCbits) << endl;
+ cout << "Sensor "<< static_cast<unsigned int>(sensor_num) << " min : " << min << endl;
+ cout << "Sensor "<< static_cast<unsigned int>(sensor_num) << " max : " << max << endl;
 }
 
 void getSensorOffset(simple_shell::CmdCall cmd_call)
@@ -553,7 +553,7 @@ void getSensorOffset(simple_shell::CmdCall cmd_call)
     return;
   }
   sensor_num = aux;
-  cout << "Requested offset of sensor " << sensor_num << endl;
+  cout << "Requested offset of sensor " << static_cast<unsigned int>(sensor_num) << endl;
   cout << "Querying get sensor configuration command..." << endl;
   if(!albatros_motor_board::parseSensorGetOffsetRequest(&request, sensor_num))
     throw(runtime_error( "Error parsing request : " + string(request) ) );
@@ -562,7 +562,7 @@ void getSensorOffset(simple_shell::CmdCall cmd_call)
   cout << response << endl;
   if(!albatros_motor_board::parseSensorGetOffsetResponse(response, &sensor_num, &offset))
     throw(runtime_error( "Error parsing response : " + string(response) ) );
-  cout << "Sensor "<< sensor_num << " offset : " << offset << endl;
+  cout << "Sensor "<< static_cast<unsigned int>(sensor_num) << " offset : " << offset << endl;
 }
 
 void setSensorOffset(simple_shell::CmdCall cmd_call)
@@ -592,7 +592,7 @@ void setSensorOffset(simple_shell::CmdCall cmd_call)
            << " (should be int16_t)" <<  endl;
       return;
     }
-  cout << "Setting offset of sensor " << sensor_num << endl;
+  cout << "Setting offset of sensor " << static_cast<unsigned int>(sensor_num) << endl;
   cout << "Querying set sensor configuration command..." << endl;
   if(!albatros_motor_board::parseSensorSetOffsetRequest(&request, sensor_num, offset))
     throw(runtime_error( "Error parsing request : " + string(request) ) );
@@ -601,7 +601,7 @@ void setSensorOffset(simple_shell::CmdCall cmd_call)
   cout << response << endl;
   if(!albatros_motor_board::parseSensorSetOffsetResponse(response, &sensor_num, &offset))
     throw(runtime_error( "Error parsing response : " + string(response) ) );
-  cout << "Sensor "<< sensor_num << " offset : " << offset << endl;
+  cout << "Sensor "<< static_cast<unsigned int>(sensor_num) << " offset : " << offset << endl;
 }
 
 void getSensorValue(simple_shell::CmdCall cmd_call)
@@ -624,7 +624,7 @@ void getSensorValue(simple_shell::CmdCall cmd_call)
     return;
   }
   sensor_num = aux;
-  cout << "Requested sensor " << sensor_num << " value" << endl;
+  cout << "Requested sensor " << static_cast<unsigned int>(sensor_num) << " value" << endl;
   cout << "Querying get sensor value command..." << endl;
   if(!albatros_motor_board::parseSensorGetValueRequest(&request, sensor_num))
     throw(runtime_error( "Error parsing request : " + string(request) ) );
@@ -634,8 +634,8 @@ void getSensorValue(simple_shell::CmdCall cmd_call)
   if(!albatros_motor_board::parseSensorGetValueResponse(response, &sensor_num,
                                               &sensor_val, &adc_val))
     throw(runtime_error( "Error parsing response : " + string(response) ) );
-  cout << "Sensor "<< sensor_num << " sampled value : " << sensor_val << endl;
-  cout << "Sensor "<< sensor_num << " adc value : " << adc_val << endl;
+  cout << "Sensor "<< static_cast<unsigned int>(sensor_num) << " sampled value : " << sensor_val << endl;
+  cout << "Sensor "<< static_cast<unsigned int>(sensor_num) << " adc value : " << adc_val << endl;
 }
 
 void stopHandler(simple_shell::CmdCall cmd_call)
