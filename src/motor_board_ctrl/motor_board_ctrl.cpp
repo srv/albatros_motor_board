@@ -1,17 +1,17 @@
 /**
- * @file motorboardctrl.cpp
+ * @file motor_board_ctrl.cpp
  * @brief Motor board controller class implementation
  * @author Joan Pau Beltran
  * @date 2011-01-03
  *
  * The class implemented in this file provide an interface to communicate with the
  * motor board and control its modules. Currently, these modules are the motors
- * and its built in PID controllers, and two sensors (pressure and water in).
+ * and thier built in PID controllers, and two sensors (pressure and water in).
  *
  * Communication with the board is done through a serial port with a set of
- * request/response commands. The SerialComm class provides the serial deals
+ * request/response commands. The SerialComm class provides deals
  * with the serial communication issues.
- * Command's format and syntax is addressed by the commandmsg module.
+ * Command's format and syntax is addressed by the command_msg module.
  */
 
 
@@ -19,7 +19,7 @@
 #include <cstring>
 
 /**
- * @brief Default constructor
+ * @brief Default constructor.
  */
 albatros_motor_board::MotorBoardCtrl::MotorBoardCtrl() :
   comm_()
@@ -27,9 +27,9 @@ albatros_motor_board::MotorBoardCtrl::MotorBoardCtrl() :
 }
 
 /**
- * @brief Initialize specified device for serial communications
+ * @brief Initialize specified device for serial communications.
  * @param dev_name device file name (including full path) representing the
- *              serial port
+ *                 serial port.
  */
 void albatros_motor_board::MotorBoardCtrl::openComm(std::string dev_name)
 {
@@ -47,7 +47,7 @@ void albatros_motor_board::MotorBoardCtrl::openComm(std::string dev_name)
 }
 
 /**
- * @brief Close serial communication
+ * @brief Close serial communication.
  */
 void albatros_motor_board::MotorBoardCtrl::closeComm()
 {
@@ -58,10 +58,10 @@ void albatros_motor_board::MotorBoardCtrl::closeComm()
 }
 
 /**
- * @brief Flush serial communication 
+ * @brief Flush serial communication.
  * 
  * Discard bytes received from the board but not read, 
- * and bytes written but not sent to the board
+ * and bytes written but not sent to the board.
  */
 void albatros_motor_board::MotorBoardCtrl::flushComm()
 {
@@ -73,8 +73,8 @@ void albatros_motor_board::MotorBoardCtrl::flushComm()
 }
 
 /**
- * @brief Get the device file name of the serial port
- * @return device file name (including full path) set on opening
+ * @brief Get the device file name of the serial port.
+ * @return device file name (including full path) set on opening.
  */
 std::string albatros_motor_board::MotorBoardCtrl::getCommName()
 {
@@ -82,8 +82,8 @@ std::string albatros_motor_board::MotorBoardCtrl::getCommName()
 }
 
 /**
- * @brief Read a command message (response) from the motor board
- * @param cmd command to be read
+ * @brief Read a command message (response) from the motor board.
+ * @param cmd command to be read.
  *
  * The read operation blocks for a certain amount of time. If there is an error
  * during the reading operation (including no response from the board)
@@ -112,10 +112,10 @@ void albatros_motor_board::MotorBoardCtrl::readCommand(CmdMsg* cmd)
 
 
 /**
- * @brief Send command message (request) to the motor board
- * @param cmd The command to be sent
+ * @brief Send command message (request) to the motor board.
+ * @param cmd command to be sent.
  *
- * If there are errors during the writing operation an exception is thrown
+ * If there are errors during the writing operation an exception is thrown.
  */
 void albatros_motor_board::MotorBoardCtrl::sendCommand(const CmdMsg& cmd)
 {
@@ -129,9 +129,9 @@ void albatros_motor_board::MotorBoardCtrl::sendCommand(const CmdMsg& cmd)
 }
 
 /**
- * @brief Query board and wait for response
- * @param request command message to be sent
- * @param response received command message
+ * @brief Query board and wait for response.
+ * @param request command message to be sent.
+ * @param response received command message.
  *
  * This function is just a wrapper for the sendCommand() and readCommand()
  * functions. These calls raise an exception when errors
@@ -147,11 +147,11 @@ void albatros_motor_board::MotorBoardCtrl::queryCommand(const CmdMsg& request,
 
 
 /**
- * @brief Read firmware version from motor board
- * @param num version number returned by to the board
+ * @brief Read firmware version from motor board.
+ * @param num firmware version number.
  *
- * Wrapper to the respective parsers and query calls
- * On errors it throws an exception
+ * Wrapper to the respective parsers and query calls.
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::getVersion(int* num)
 {
@@ -167,11 +167,11 @@ void albatros_motor_board::MotorBoardCtrl::getVersion(int* num)
 
 
 /**
- * @brief Read speeds from motor board
- * @param rpm speeds returned to the board (rpm)
+ * @brief Read speeds from motor board.
+ * @param rpm current motor speeds (rpm).
  *
- * Wrapper to the respective parsers and query calls
- * On errors it throws an exception
+ * Wrapper to the respective parsers and query calls.
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::getSpeeds(MotorSpeeds* rpm)
 {
@@ -188,12 +188,12 @@ void albatros_motor_board::MotorBoardCtrl::getSpeeds(MotorSpeeds* rpm)
 }
 
 /**
- * @brief Request new speeds to motor board
- * @param req_pc requested speeds (\% of the nominal speed)
- * @param res_rpm current speeds returned by the motor board (rpm)
+ * @brief Request new speeds to motor board.
+ * @param req_pc requested speeds (\% of the nominal speed).
+ * @param res_rpm current speeds (rpm).
  *
  * Wrapper to the respective parsers and query calls.
- * On errors it throws an exception
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::setSpeeds(const MotorSpeeds& req_pc,
                                            MotorSpeeds* res_rpm)
@@ -214,11 +214,11 @@ void albatros_motor_board::MotorBoardCtrl::setSpeeds(const MotorSpeeds& req_pc,
 }
 
 /**
- * @brief Read accelerations from motor board
- * @param pc accelerations returned by the board (\%/ds percentage of nominal speed per decisecond)
+ * @brief Read accelerations from motor board.
+ * @param pc current accelerations (\%/ds percentage of nominal speed per decisecond).
  *
  * Wrapper to the respective parsers and query calls.
- * On errors it throws an exception
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::getAccels(MotorAccels* pc)
 {
@@ -234,12 +234,12 @@ void albatros_motor_board::MotorBoardCtrl::getAccels(MotorAccels* pc)
 }
 
 /**
- * @brief Request new accelerations to motor board
- * @param req_pc_ds requested accelerations (\%/ds percentage of nominal speed per decisecond)
- * @param res_pc_ds current accelerations returned by the motor board (\%/ds percentage of nominal speed per decisecond)
+ * @brief Request new accelerations to motor board.
+ * @param req_pc_ds requested accelerations (\%/ds percentage of nominal speed per decisecond).
+ * @param res_pc_ds current accelerations (\%/ds percentage of nominal speed per decisecond).
  *
  * Wrapper to the respective parsers and query calls.
- * On errors it throws an exception
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::setAccels(const MotorAccels& req_pc_ds,
                                            MotorAccels* res_pc_ds)
@@ -259,6 +259,15 @@ void albatros_motor_board::MotorBoardCtrl::setAccels(const MotorAccels& req_pc_d
       (*res_pc_ds)[i] = pc8[i];
 }
 
+/**
+ * @brief Read motors' status from motor board.
+ * @param errors current error count for each motor.
+ *
+ * Wrapper to the respective parsers and query calls.
+ * This function also does the conversion from float to Q15 format as needed by
+ * the parsers.
+ * On errors it throws an exception.
+ */
 void albatros_motor_board::MotorBoardCtrl::getStatus(MotorStatus* errors)
 {
   CmdMsg request, response;
@@ -273,15 +282,15 @@ void albatros_motor_board::MotorBoardCtrl::getStatus(MotorStatus* errors)
 }
 
 /**
- * @brief Read built in PID controller's configuration for a motor
- * @param motor_id selected motor
- * @param active true if the built in controller is enabled, false otherwise
- * @param Kpid control constants Kp, Ki and Kd (in -1..1)
+ * @brief Read built in PID controllers' configuration for a motor.
+ * @param motor_id selected motor.
+ * @param active true if the built in controller is enabled, false otherwise.
+ * @param Kpid control constants Kp, Ki and Kd (in range [-1..1[ ).
  *
  * Wrapper to the respective parsers and query calls.
  * This function also does the conversion to float from Q15 format returned
  * by the parsers.
- * On errors it throws an exception
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::getMotorctrl(const Motor motor_id,
                                               bool* active, PIDConstants* Kpid)
@@ -304,17 +313,17 @@ void albatros_motor_board::MotorBoardCtrl::getMotorctrl(const Motor motor_id,
 }
 
 /**
- * @brief Set built in PID controller's configuration for a motor
- * @param motor_id selected motor
- * @param active enable built in PID controller if true, disable it otherwise
- * @param Kpid Kp, Ki and Kd control constants (in range [-1..1[ )
- * @param res_active response PID controller status
- * @param res_Kpid response PID controller constants
+ * @brief Set built in PID controllers' configuration for a motor.
+ * @param motor_id selected motor.
+ * @param active enable built in PID controller if true, disable it otherwise.
+ * @param Kpid Kp, Ki and Kd control constants (in range [-1..1[ ).
+ * @param res_active response PID controller status.
+ * @param res_Kpid response PID controller constants.
  *
  * Wrapper to the respective parsers and query calls.
  * This function also does the conversion from float to Q15 format as needed by
  * the parsers.
- * On errors it throws an exception
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::setMotorctrl(const Motor motor_id,
                                               bool active, const PIDConstants& Kpid,
@@ -347,15 +356,16 @@ void albatros_motor_board::MotorBoardCtrl::setMotorctrl(const Motor motor_id,
 }
 
 /**
- * @brief Read configuration for a sensor
- * @param sensor_id desired sensor
- * @param type kind of sensor
- * @param res output sensor resolution units (e.g. -3 equal mili)
- * @param min minimum sensor value
- * @param max maximum sensor value
+ * @brief Read configuration for a sensor.
+ * @param sensor_id selected sensor.
+ * @param type kind of sensor.
+ * @param res output sensor resolution units (e.g. -3 equal mili).
+ * @param ADCbits bits in the on-board analogic-digital conversor.
+ * @param min minimum sensor value.
+ * @param max maximum sensor value.
  *
  * Wrapper to the respective parsers and query calls.
- * On errors it throws an exception
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::getSensorConfig(const Sensor sensor_id,
                                                  int* type, int* res, int* ADCbits,
@@ -383,12 +393,12 @@ void albatros_motor_board::MotorBoardCtrl::getSensorConfig(const Sensor sensor_i
 }
 
 /**
- * @brief Read current offset of a sensor
- * @param sensor_id selected sensor
- * @param offset current offset
+ * @brief Read current offset of sensor.
+ * @param sensor_id selected sensor.
+ * @param offset current offset.
  *
  * Wrapper to the respective parsers and query calls.
- * On errors it throws an exception
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::getSensorOffset(const Sensor sensor_id,
                                                  int* offset)
@@ -409,13 +419,13 @@ void albatros_motor_board::MotorBoardCtrl::getSensorOffset(const Sensor sensor_i
 }
 
 /**
- * @brief Request new value for sensor's offset
- * @param sensor_id selected sensor
- * @param offset new offset value
- * @param res_offset response offset
+ * @brief Request new value for offset of a sensor.
+ * @param sensor_id selected sensor.
+ * @param offset new offset value.
+ * @param res_offset response offset.
  *
  * Wrapper to the respective parsers and query calls.
- * On errors it throws an exception
+ * On errors it throws an exception.
  */
 void albatros_motor_board::MotorBoardCtrl::setSensorOffset(const Sensor sensor_id,
                                                  int offset, int* res_offset)
@@ -437,14 +447,14 @@ void albatros_motor_board::MotorBoardCtrl::setSensorOffset(const Sensor sensor_i
 }
 
 /**
- * @brief Read current value of sensor
- * @param sensor_id selected sensor
- * @param value current sensor's value
- * @param adc_value bit representation of sensor's value from the AD converter
+ * @brief Read current value of sensor.
+ * @param sensor_id selected sensor.
+ * @param value current sensor's value.
+ * @param adc_value bit representation of sensor's value from the AD converter.
  *
  * Wrapper to the respective parsers and query calls.
- * On errors it throws an exception
- * TODO: Check output meaning (related with offset)
+ * On errors it throws an exception.
+ * TODO: Check output meaning (related with offset).
  */
 void albatros_motor_board::MotorBoardCtrl::getSensorValue(const Sensor sensor_id,
                                                 int* value, int* adc_value)
@@ -466,10 +476,10 @@ void albatros_motor_board::MotorBoardCtrl::getSensorValue(const Sensor sensor_id
 }
 
 /**
- * @brief Motor identifier output operator
- * @param ostr output stream
- * @param m motor identifier
- * @return reference to the output stream
+ * @brief Motor identifier output operator.
+ * @param ostr output stream.
+ * @param m motor identifier.
+ * @return reference to the output stream.
  */
 std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
                                                const MotorBoardCtrl::Motor& m)
@@ -478,10 +488,10 @@ std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
 }
 
 /**
- * @brief Sensor identifier output operator
- * @param ostr output stream
- * @param s sensor identifier
- * @return reference to the output stream
+ * @brief Sensor identifier output operator.
+ * @param ostr output stream.
+ * @param s sensor identifier.
+ * @return reference to the output stream.
  */
 std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
                                                const MotorBoardCtrl::Sensor& s)
@@ -490,10 +500,10 @@ std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
 }
 
 /**
- * @brief PID constant identifier output operator
- * @param ostr output stream
- * @param k PID constant indetifier
- * @return reference to the output stream
+ * @brief PID constant identifier output operator.
+ * @param ostr output stream.
+ * @param k PID constant indetifier.
+ * @return reference to the output stream.
  */
 std::ostream& albatros_motor_board::operator<<(std::ostream& ostr,
                                                const MotorBoardCtrl::PIDConstant& k)

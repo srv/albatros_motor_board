@@ -1,17 +1,17 @@
 /**
- * @file motorboardctrl.h
+ * @file motor_board_ctrl.h
  * @brief Motor board controller class presentation
  * @author Joan Pau Beltran
  * @date 2011-01-03
  *
  * The class presented in this file provides an interface to communicate with the
  * motor board and control its modules. Currently, these modules are the motors
- * and its built in PID controllers, and two sensors (pressure and water in).
+ * and their built in PID controllers, and two sensors (pressure and water in).
  *
  * Communication with the board is done through a serial port with a set of
- * request/response commands. The SerialComm class provides the serial deals
- * with the serial communication issues.
- * Command's format and syntax is addressed by the commandmsg module.
+ * request/response commands.
+ * The SerialComm class deals with the serial communication issues.
+ * Command's format and syntax is addressed by the command_msg module.
  */
 
 #ifndef MOTOR_BOARD_CTRL_H

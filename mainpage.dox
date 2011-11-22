@@ -2,14 +2,69 @@
 \mainpage
 \htmlinclude manifest.html
 
-\b motorboard is ... 
+This package provides a driver library for a motor board model provided 
+by Albatros. It also exposes the motor board capabilities to the ROS ecosystem
+via a node and a nodelet. However, the driver library does not depend on any ROS
+component, and a standalone console program is also provided for debugging purposes.
 
-<!-- 
-Provide an overview of your package.
--->
+The motor board is build as a set of modules, each one with its own commands
+to control its capabilities. At the moment the modules are leds, motors and
+sensors of several kinds (pressure, temperature, voltage and depth),
+but not all of them need to be available in a specific board.
 
+Communication and control of the motor board modules is done through a set of
+request-response messages on the serial port.
+
+\section Motor board communication protocol
+According to Albatros documentation, the serial communication parameters are
+8N1 (eight bits per character, no parity and one stop bit) at 38400 bits/s.
+
+Command request messages and command response messages share the same format:
+A message is a character sequence of the form: "S0120123456789abcdef0123X\r"
+and has the following parts:
+ - start_cmd : "S" single 'S' char.
+ - cmd_id    : "012" 3 chars with the hexadecimal representation of a 11 bit
+                       command identifier.
+ - payload   : "0123456789abcdef" 16 chars with the hexadecimal representation
+                       of a 8 byte payload with response data or command
+                       arguments.
+ - checksum  : "0123" 4 chars with the hexadecimal representation of the 2 byte
+                       checksum of the values represented by cmd_id and payload
+                       (the checksum is ignored in responses since it does not
+                       seem to make sense: 2 bytes are not enough).
+ - end_cmd   : "X\r" single 'X' char followed by carriage return '\r'
+                       (the board sends responses line by line, and using
+                       carriage return character '\r' as end of line mark).
+
+\section Nodes and nodelets
+The ROS interface is provided in two flavours that behave exactly in the same way:
+a node version and a nodelet version.
+
+Motor speeds and sensor values are sampled periodically and published on an appropiate topic.
+On another topic, motor speed requests are listened to and passed to the board.
+Finally, motor and sensor operational parameters are exposed for dynamic reconfiguration.
+When a parameter is updated, the corresponding command is sent to the board.
+
+\section Standalone console
+For debugging purposes, a standalone (ROS independent) console is provided too.
+The console provide a simple shell like command prompt.
+- Type 'help' to list the available commands.
+- Type a command without argument to checi its usage.
+- Type 'quit' to exit.
 
 \section codeapi Code API
+
+
+The driver library is composed of three components:
+- The SerialComm class deals with the serial comunication issues.
+- The command_msg module introduces the available commands and their format.
+- The MotorBoardCtrl class uses both previous components to interface a motor board device.
+
+The ROS interface is provided in a base class 
+from which the node and nodelet versions are derived.
+
+The standalone console interface is included in the package 
+just to distribute it together with the library.
 
 <!--
 Provide links to specific auto-generated API documentation within your

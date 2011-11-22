@@ -1,11 +1,11 @@
 /**
- * @file commandmsg.h
+ * @file command_msg.h
  * @brief Motor board modules and command message parsers presentation
  * @author Joan Pau Beltran
  * @date 05/01/2011
  *
  * The motor board is build as a set of modules, each one with its own commands
- * to control its capabilities. At the moment the modules are leds, motors and ç
+ * to control its capabilities. At the moment the modules are leds, motors and
  * sensors of several kinds (pressure, temperature, voltage and depth),
  * but not all of them need to be available in a specific board.
  *
@@ -100,13 +100,13 @@ enum LedCommand
 //! Number of led commands
 const int NUM_LED_CMDS = 7;
 //! Led command id table
-const CmdId LED_CMD[NUM_LED_CMDS] = {0x100, ///!> GET_IMAX cmd id
-                                     0x101, ///!> GET_ICURRENT cmd id
-                                     0x102, ///!> GET_LEVEL cmd id
-                                     0x103, ///!> SET_LEVEL cmd id
-                                     0x104, ///!> GET_TEMPERATURE cmd id
+const CmdId LED_CMD[NUM_LED_CMDS] = {0x100, //!> GET_IMAX cmd id
+                                     0x101, //!> GET_ICURRENT cmd id
+                                     0x102, //!> GET_LEVEL cmd id
+                                     0x103, //!> SET_LEVEL cmd id
+                                     0x104, //!> GET_TEMPERATURE cmd id
                                      0x105, //!> GET_STATUS cmd id
-                                     0x10e //!> GET_VERSION cmd id
+                                     0x10e  //!> GET_VERSION cmd id
             };
 //!@}
 
@@ -139,7 +139,7 @@ const CmdId MOTOR_CMD[NUM_MOTOR_CMDS] = {0x182, //!> GET_DEVICE_CONFIG cmd id
                                          0x186, //!> GET_ACCEL cmd id
                                          0x187, //!> GET_TEMPERATURE cmd id
                                          0x188, //!> GET_ICURRENT cmd id
-                                         0x189 //!> GET_STATUS cmd id
+                                         0x189  //!> GET_STATUS cmd id
             };
 //!@}
 
@@ -156,12 +156,12 @@ enum MotorCtrlCommand
   MOTORCTRL_GET_CONSTANTS = 0,
   MOTORCTRL_SET_CONSTANTS
 };
-//! Number of motor commands
+//! Number of motor control commands
 const int NUM_MOTORCTRL_CMDS = 2;
-//! Motor command id table
+//! Motor control command id table
 const CmdId MOTORCTRL_CMD[NUM_MOTORCTRL_CMDS] = {
                                          0x200, //!> GET_CONSTANTS cmd id
-                                         0x201, //!> SET_CONSTANTS cmd id
+                                         0x201  //!> SET_CONSTANTS cmd id
             };
 //!@}
 
@@ -180,7 +180,7 @@ enum SensorCommand
   SENSOR_SET_OFFSET,
   SENSOR_GET_VALUE
 };
-//! Number of motor commands
+//! Number of sensor commands
 const int NUM_SENSOR_CMDS = 4;
 //! Motor command id table
 const CmdId SENSOR_CMD[NUM_SENSOR_CMDS] = {
@@ -206,7 +206,7 @@ enum ModuleType
   MOTORCTRL,
   SENSOR
 };
-//! Number of modules in the motor board;
+//! Number of modules in the motor board
 const int NUM_MODULE_TYPES = 4;
 //! Number of commands per module
 const int NUM_MODULE_CMDS[NUM_MODULE_TYPES] = { NUM_LED_CMDS,
@@ -222,6 +222,7 @@ const int NUM_MODULE_CMDS[NUM_MODULE_TYPES] = { NUM_LED_CMDS,
 // The cmd id table is declared extern and defined in the implementation due to
 // linker issues (multiple definitions when several files include the header)
 extern const CmdId* MODULE_CMD_ID[NUM_MODULE_TYPES];
+
 //!@}
 
 

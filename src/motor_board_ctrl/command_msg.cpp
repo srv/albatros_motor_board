@@ -1,5 +1,5 @@
 /**
- * @file commandmsg.cpp
+ * @file command_msg.cpp
  * @brief Motor board command message parsers implementation
  * @author Joan Pau Beltran
  * @date 05/01/2011
@@ -9,7 +9,7 @@
  *
  * In the functions provided by this file, the conversion between the character
  * representation and the integer value is done via the sscanf() and sprintf()
- * functions in <cstdlib>. sscanf() can only extract hexadecimals as unsigned
+ * functions in <cstdio>. sscanf() can only extract hexadecimals as unsigned
  * integers, and the conversion from unsigned integral values to a signed type
  * is not defined when the new type can not represent the unsigned value.
  * However, the conversion is done with static casts and works on gcc,
@@ -101,7 +101,7 @@ bool albatros_motor_board::parseLedGetImaxRequest(CmdMsg* req)
 }
 
 /**
- * Parse response with leds' maximum intensities
+ * @brief Parse response with leds' maximum intensities
  * @param res the received response
  * @param imax0 led 0 maximum intensity (mA)
  * @param imax1 led 1 maximum intensity (mA)
@@ -1099,7 +1099,7 @@ bool albatros_motor_board::parseSensorGetDeviceConfigRequest(CmdMsg* req,
  * @param type sensor type
  * @param unit_res resolution of the measurement units.
  *              Sensor value is lecture*10^unit_res (e.g. if unit_res is -3 lecture values are in milis)
- * @param ADCbits number of bits used by the sensor analogic-digital conversor //TODO: Just a mere supposition, check it
+ * @param ADCbits bits in the on-board analogic-digital conversor //TODO: Just a mere supposition, check it
  * @param min minimum value the sensor is sensitive to
  * @param max maximum value the sensor is sensitive to
  * @return true on success, false on errors parsing the response
