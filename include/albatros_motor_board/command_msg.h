@@ -4,7 +4,7 @@
  * @author Joan Pau Beltran
  * @date 05/01/2011
  *
- * The motor board is build as a set of modules, each one with its own commands
+ * The motor board is built as a set of modules, each one with its own commands
  * to control its capabilities. At the moment the modules are leds, motors and
  * sensors of several kinds (pressure, temperature, voltage and depth),
  * but not all of them need to be available in a specific board.

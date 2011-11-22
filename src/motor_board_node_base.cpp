@@ -25,14 +25,18 @@
  *
  * @par Parameters
  *
- * - @b ~port  device file name for the serial port (default "/dev/ttyS0")
- * - @b ~rate  state (pressure, speeds and status) publishing rate (default 10 hz)
- * - @b ~sensors/pressure/offset offset for the pressure sensor (default 0)
- * - @b ~motors/(front|down)/(left|right)/accel motor acceleration (% per dsec, default 5 %)
- * - @b ~motors/(front|down)/(left|right)/PID/active motor PID controller state (boolean default false)
- * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID proportional constant (double default 0.0)
- * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID integral constant (double default 0.0)
- * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID derivative constant (double default 0.0)
+ * - \b "~rate_speeds"   : \b [double] Publishing rate for motor speeds topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
+ * - \b "~rate_status"   : \b [double] Publishing rate for motor_status topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
+ * - \b "~rate_pressure" : \b [double] Publishing rate for pressure topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
+ * - \b "~serial_port" : \b [str] Serial port device file name (including full path) min: , default: /dev/ttyS0, max: 
+ * - \b "~pressure_offset" : \b [int] Pressure sensor offset. min: -32768, default: 0, max: 32767
+ * - \b "~waterin_offset"  : \b [int] Water in sensor offset. min: -32768, default: 0, max: 32767
+ * - \b "~(forward|downward)_(left|right)_PID_on" : \b [bool]   front/down left/right PID state. min: False, default: False, max: True
+ * - \b "~(forward|downward)_(left|right)_PID_Kp" : \b [double] front/down left/right PID proportional constant. min: -1.0, default: 0.0, max: 1.0
+ * - \b "~(forward|downward)_(left|right)_PID_Ki" : \b [double] front/down left/right PID integral     constant. min: -1.0, default: 0.0, max: 1.0
+ * - \b "~(forward|downward)_(left|right)_PID_Kd" : \b [double] front/down left/right PID derivative   constant. min: -1.0, default: 0.0, max: 1.0
+ * - \b "~(forward|downward)_(left|right)_accel"  : \b [int]    front/down left/right acceleration (%/ds). min: 0, default: 5, max: 100
+ * - \b "~(forward|downward)_(left|right)_invert" : \b [bool]   front/down left/right speed inversion. min: False, default: False, max: True
  */
 
 

@@ -7,7 +7,7 @@ by Albatros. It also exposes the motor board capabilities to the ROS ecosystem
 via a node and a nodelet. However, the driver library does not depend on any ROS
 component, and a standalone console program is also provided for debugging purposes.
 
-The motor board is build as a set of modules, each one with its own commands
+The motor board is built as a set of modules, each one with its own commands
 to control its capabilities. At the moment the modules are leds, motors and
 sensors of several kinds (pressure, temperature, voltage and depth),
 but not all of them need to be available in a specific board.
@@ -15,11 +15,11 @@ but not all of them need to be available in a specific board.
 Communication and control of the motor board modules is done through a set of
 request-response messages on the serial port.
 
-\section Motor board communication protocol
+\section protocol Communication protocol
 According to Albatros documentation, the serial communication parameters are
 8N1 (eight bits per character, no parity and one stop bit) at 38400 bits/s.
 
-Command request messages and command response messages share the same format:
+Command request messages and command response messages share the same format.\n
 A message is a character sequence of the form: "S0120123456789abcdef0123X\r"
 and has the following parts:
  - start_cmd : "S" single 'S' char.
@@ -36,20 +36,21 @@ and has the following parts:
                        (the board sends responses line by line, and using
                        carriage return character '\r' as end of line mark).
 
-\section Nodes and nodelets
+\section nodes Nodes and nodelets
 The ROS interface is provided in two flavours that behave exactly in the same way:
 a node version and a nodelet version.
 
-Motor speeds and sensor values are sampled periodically and published on an appropiate topic.
-On another topic, motor speed requests are listened to and passed to the board.
+Motor speeds and sensor values are sampled periodically and published on an appropiate topic.\n
+On another topic, motor speed requests are listened to and passed to the board.\n
 Finally, motor and sensor operational parameters are exposed for dynamic reconfiguration.
 When a parameter is updated, the corresponding command is sent to the board.
 
-\section Standalone console
+
+\section console Standalone console
 For debugging purposes, a standalone (ROS independent) console is provided too.
-The console provide a simple shell like command prompt.
+The console provides a simple shell alike command prompt.
 - Type 'help' to list the available commands.
-- Type a command without argument to checi its usage.
+- Type a command without any argument to check its usage.
 - Type 'quit' to exit.
 
 \section codeapi Code API

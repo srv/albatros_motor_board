@@ -1,18 +1,16 @@
 <package>
-  <description brief="albatros_motor_board">
+  <description brief="Albatros motor board driver">
 
-     This package contains several nodes to manage a motor board provided by
-     Albatros. The motor board is equipped with sensors (water in and pressure)
-     and four motors. Communications with the motor board are through a
-     serial port. The main node is for monitoring the current status of 
-     sensors and motors and providing services to set its configurable 
-     parameters. Other nodes provide low and high level navigation control.
-
+     This package contains a driver library and a ROS interface 
+     to manage a motor board provided by Albatros.
+     The motor board is equipped with sensors (water-in and pressure) and four motors.
+     Communications with the motor board are through a serial port.
+     
   </description>
   <author>Joan Pau Beltran</author>
   <license>GPL</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/albatros_motorboard</url>
+  <url>http://ros.org/wiki/albatros_motor_board</url>
   <depend package="roscpp"/>
   <depend package="std_msgs"/>
   <depend package="driver_base"/>
