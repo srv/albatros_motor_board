@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Motor board controller class presentation
+ * @brief Motor board controller class presentation.
  * @author Joan Pau Beltran
  * @date 2011-01-03
  *

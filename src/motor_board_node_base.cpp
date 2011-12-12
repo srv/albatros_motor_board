@@ -405,16 +405,6 @@ void albatros_motor_board::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDy
 {
   try
   {
-    /**
-     * - @b ~rate  state (pressure, speeds and status) publishing rate (default 10 hz)
-     * - @b ~sensors/pressure/offset offset for the pressure sensor (default 0)
-     * - @b ~motors/(front|down)/(left|right)/accel motor acceleration (% per dsec, default 5 %)
-     * - @b ~motors/(front|down)/(left|right)/PID/active motor PID controller state (boolean)
-     * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID proportional constant (double)
-     * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID integral constant (double)
-     * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID derivative constant (double)
-    */
-
     if ( updateCommNameParam(params) )
     {
       mbctrl_ready_ = false;

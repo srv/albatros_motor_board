@@ -1,6 +1,6 @@
 /**
  * @file
- * @brief Motor board command message parsers implementation
+ * @brief Motor board command message parsers implementation.
  * @author Joan Pau Beltran
  * @date 05/01/2011
  *

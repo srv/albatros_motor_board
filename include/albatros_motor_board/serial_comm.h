@@ -1,10 +1,10 @@
-/******************************************************************************
- * Class: SerialComm
- * Author: Joan Pau on original version from ckonvalin
- * Created: 11/13/05
- *
- *
- *****************************************************************************/
+/**
+ * @file
+ * @brief Serial port interface presentation.
+ * @author Joan Pau Beltran
+ * @note Based on original version from ckonvalin for the Memsense IMU driver.
+ */
+
 #ifndef SERIAL_COMM_H
 #define SERIAL_COMM_H
 
