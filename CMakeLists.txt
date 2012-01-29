@@ -37,15 +37,24 @@ gencfg()
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
 
-add_subdirectory(src/motor_board_ctrl)
-add_subdirectory(src/motor_board_console)
+include_directories(${PROJECT_SOURCE_DIR}/include/albatros_motor_board)
+
+rosbuild_add_library(motor_board_ctrl
+                       src/motor_board_ctrl/motor_board_ctrl.cpp
+                       src/motor_board_ctrl/serial_comm.cpp
+                       src/motor_board_ctrl/command_msg.cpp)
+
+rosbuild_add_executable(motor_board_console
+                          src/motor_board_console/motor_board_console.cpp
+                          src/motor_board_console/simple_shell.cpp)
+target_link_libraries(motor_board_console motor_board_ctrl)
 
 rosbuild_add_executable(motor_board_node
-                         src/motor_board_node.cpp
-                         src/motor_board_node_base.cpp)
-target_link_libraries(motor_board_node motor_board_ctrl)
+                          src/motor_board_node.cpp
+                          src/motor_board_node_base.cpp)
+target_link_libraries(motor_board_node  motor_board_ctrl)
 
 rosbuild_add_library(motor_board_nodelet
-                      src/motor_board_nodelet.cpp
-                      src/motor_board_node_base.cpp)
-target_link_libraries(motor_board_node motor_board_ctrl)
+                       src/motor_board_nodelet.cpp
+                       src/motor_board_node_base.cpp)
+target_link_libraries(motor_board_nodelet motor_board_ctrl)
