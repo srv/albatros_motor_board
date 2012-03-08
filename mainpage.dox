@@ -15,7 +15,9 @@ but not all of them need to be available in a specific board.
 Communication and control of the motor board modules is done through a set of
 request-response messages on the serial port.
 
+
 \section protocol Communication protocol
+
 According to Albatros documentation, the serial communication parameters are
 8N1 (eight bits per character, no parity and one stop bit) at 38400 bits/s.
 
@@ -36,28 +38,31 @@ and has the following parts:
                        (the board sends responses line by line, and using
                        carriage return character '\r' as end of line mark).
 
+
 \section nodes Nodes and nodelets
+
 The ROS interface is provided in two flavours that behave exactly in the same way:
 a node version and a nodelet version.
 
-Motor speeds and sensor values are sampled periodically and published on an appropiate topic.\n
+Motor speeds and sensor values are sampled periodically and published on respective topics.\n
 On another topic, motor speed requests are listened to and passed to the board.\n
 Finally, motor and sensor operational parameters are exposed for dynamic reconfiguration.
 When a parameter is updated, the corresponding command is sent to the board.
 
 
 \section console Standalone console
+
 For debugging purposes, a standalone (ROS independent) console is provided too.
 The console provides a simple shell alike command prompt.
 - Type 'help' to list the available commands.
 - Type a command without any argument to check its usage.
 - Type 'quit' to exit.
 
+
 \section codeapi Code API
 
-
 The driver library is composed of three components:
-- The SerialComm class deals with the serial comunication issues.
+- The SerialComm class deals with the serial communication issues.
 - The command_msg module introduces the available commands and their format.
 - The MotorBoardCtrl class uses both previous components to interface a motor board device.
 
