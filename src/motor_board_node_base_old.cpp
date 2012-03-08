@@ -15,11 +15,8 @@
  * - @b status topic (albatros_motor_board/MotorStatus)
  *   Motor error counts.
  *
- * - @b pressure topic (srv_msgs/Pressure.pressure)
+ * - @b pressure topic (srv_msgs/Pressure)
  *   Pressure sensor sample.
- *    
- *   - @b profunditat topic (srv_msgs/Pressure.profundidad)
- *      Deep in meters computed from the Pressure value in psi given by the sensor. 
  *
  * @par Subscribes
  *
@@ -76,8 +73,6 @@ void albatros_motor_board::MotorBoardNodeBase::advertiseSensorTopics()
                                                                     pressure_subs_cb,
                                                                     pressure_subs_cb);
 }
-
-
 
 void albatros_motor_board::MotorBoardNodeBase::initDynParamsSrv()
 {
@@ -165,7 +160,7 @@ void albatros_motor_board::MotorBoardNodeBase::getPublishRateParam(const OutTopi
       *rate = current_params_.rate_pressure;
       break;
   }
-} 
+}
 
 template <typename T>
 bool albatros_motor_board::MotorBoardNodeBase::updateParam(T* old_val,
@@ -531,10 +526,7 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorPressure()
   {
     ros::Time stamp = ros::Time::now();
     int value;
-    double profundidad;
-// fbf 8-03-2012 test to retrieve the waterin info. 
-    mbctrl_.getSensorValue(mbctrl_.WATERIN, &value); 
-    //mbctrl_.getSensorValue(mbctrl_.PRESSURE, &value); 
+    mbctrl_.getSensorValue(mbctrl_.PRESSURE, &value);
     srv_msgs::Pressure msg;
     msg.header.stamp = stamp;
     msg.pressure = double(value);
