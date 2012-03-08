@@ -15,8 +15,10 @@
  * - @b status topic (albatros_motor_board/MotorStatus)
  *   Motor error counts.
  *
- * - @b pressure topic (srv_msgs/Pressure)
+ * - @b pressure topic (srv_msgs/Pressure.pressure)
  *   Pressure sensor sample.
+ *    
+ *  
  *
  * @par Subscribes
  *
@@ -73,6 +75,8 @@ void albatros_motor_board::MotorBoardNodeBase::advertiseSensorTopics()
                                                                     pressure_subs_cb,
                                                                     pressure_subs_cb);
 }
+
+
 
 void albatros_motor_board::MotorBoardNodeBase::initDynParamsSrv()
 {
@@ -160,7 +164,7 @@ void albatros_motor_board::MotorBoardNodeBase::getPublishRateParam(const OutTopi
       *rate = current_params_.rate_pressure;
       break;
   }
-}
+} 
 
 template <typename T>
 bool albatros_motor_board::MotorBoardNodeBase::updateParam(T* old_val,
@@ -407,16 +411,6 @@ void albatros_motor_board::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDy
 {
   try
   {
-    /**
-     * - @b ~rate  state (pressure, speeds and status) publishing rate (default 10 hz)
-     * - @b ~sensors/pressure/offset offset for the pressure sensor (default 0)
-     * - @b ~motors/(front|down)/(left|right)/accel motor acceleration (% per dsec, default 5 %)
-     * - @b ~motors/(front|down)/(left|right)/PID/active motor PID controller state (boolean)
-     * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID proportional constant (double)
-     * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID integral constant (double)
-     * - @b ~motors/(front|down)/(left|right)/PID/Kp motor PID derivative constant (double)
-    */
-
     if ( updateCommNameParam(params) )
     {
       mbctrl_ready_ = false;
@@ -526,7 +520,14 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorPressure()
   {
     ros::Time stamp = ros::Time::now();
     int value;
-    mbctrl_.getSensorValue(mbctrl_.PRESSURE, &value);
+    double profundidad;
+// fbf 8-03-2012 retrieve the waterin info. 
+    mbctrl_.getSensorValue(mbctrl_.WATERIN, &value); 
+    waterin=int(value);
+    srv_msgs::waterin msgwaterin;
+        
+
+    mbctrl_.getSensorValue(mbctrl_.PRESSURE, &value); 
     srv_msgs::Pressure msg;
     msg.header.stamp = stamp;
     msg.pressure = double(value);

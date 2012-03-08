@@ -17,6 +17,9 @@
  *
  * - @b pressure topic (srv_msgs/Pressure)
  *   Pressure sensor sample.
+
+* - @b humidity topic (srv_msgs/WaterIn)
+ *   humidity sensor sample.
  *
  * @par Subscribes
  *
@@ -46,6 +49,7 @@
 #include <ros/ros.h>
 #include <dynamic_reconfigure/server.h>
 #include <srv_msgs/Pressure.h>
+#include <srv_msgs/WaterIn.h> //fbf 08-03-2012
 #include <srv_msgs/MotorLevels.h>
 #include "albatros_motor_board/MotorStatus.h"
 #include "albatros_motor_board/MotorBoardDynParamsConfig.h"
@@ -71,9 +75,9 @@ public:
   void cleanUp();
 
 private:
-
-  enum OutTopic {MOTOR_SPEEDS, MOTOR_STATUS, SENSOR_PRESSURE};
-  static const int NUM_OUT_TOPICS = 3;
+//fbf 08-03-2012 add the OutTopic SENSOR_WATERIN
+  enum OutTopic {MOTOR_SPEEDS, MOTOR_STATUS, SENSOR_PRESSURE, SENSOR_WATERIN};
+  static const int NUM_OUT_TOPICS = 4; // fbf 08-03-2012 increment the number of topics
 
   ros::NodeHandle node_;
   ros::NodeHandle priv_;
