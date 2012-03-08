@@ -18,8 +18,7 @@
  * - @b pressure topic (srv_msgs/Pressure.pressure)
  *   Pressure sensor sample.
  *    
- *   - @b profunditat topic (srv_msgs/Pressure.profundidad)
- *      Deep in meters computed from the Pressure value in psi given by the sensor. 
+ *  
  *
  * @par Subscribes
  *
