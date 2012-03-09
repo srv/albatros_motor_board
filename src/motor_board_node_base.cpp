@@ -55,8 +55,8 @@ albatros_motor_board::MotorBoardNodeBase::MotorBoardNodeBase(const ros::NodeHand
 {
   do_publish_[MOTOR_SPEEDS] = false;
   do_publish_[MOTOR_STATUS] = false;
-  do_publish_[SENSOR_PRESSURE] = true;
- // do_publish_[SENSOR_WATERIN] = false; // fbf 08-03-2012 add new topic. If this variable is true, topic will be publish, otherwise it won't  
+  do_publish_[SENSOR_PRESSURE] = false;
+  do_publish_[SENSOR_WATERIN] = false; // fbf 08-03-2012 add new topic. If this variable is true, topic will be publish, otherwise it won't  
   
 }
 
@@ -174,9 +174,9 @@ void albatros_motor_board::MotorBoardNodeBase::getPublishRateParam(const OutTopi
     case SENSOR_PRESSURE :
       *rate = current_params_.rate_pressure;
 	break;
- //   case SENSOR_WATERIN: //fbf 9-03-2011
-//      *rate=current_params_.rate_humidity;
-//      break;
+    case SENSOR_WATERIN: //fbf 9-03-2011
+      *rate=current_params_.rate_humidity;
+        break;
   }
 } 
 
@@ -274,9 +274,9 @@ bool albatros_motor_board::MotorBoardNodeBase::updatePublishRateParam(const Moto
     case SENSOR_PRESSURE :
       res = updateParam(&(current_params_.rate_pressure),params.rate_pressure);
       break;
-   // case SENSOR_WATERIN :
-   //   res = updateParam(&(current_params_.rate_humidity),params.rate_humidity); //fbf 09-03-2012
-    //  break;
+    case SENSOR_WATERIN :
+      res = updateParam(&(current_params_.rate_humidity),params.rate_humidity); //fbf 09-03-2012
+      break;
   }
   return res;
 }
@@ -369,6 +369,9 @@ void albatros_motor_board::MotorBoardNodeBase::updatePublishRate(const OutTopic&
         case SENSOR_PRESSURE :
           cb = boost::bind(&MotorBoardNodeBase::publishSensorPressure, this);
           break;
+	case SENSOR_WATERIN :
+          cb = boost::bind(&MotorBoardNodeBase::publishSensorPressure, this);
+          break;
       }
       publish_timer_[t] = node_.createTimer(ros::Duration(1.0 / rate), cb);
     }
@@ -450,7 +453,7 @@ void albatros_motor_board::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDy
       if ( updatePublishRateParam(params, MOTOR_SPEEDS)    ) updatePublishRate(MOTOR_SPEEDS);
       if ( updatePublishRateParam(params, MOTOR_STATUS)    ) updatePublishRate(MOTOR_STATUS);
       if ( updatePublishRateParam(params, SENSOR_PRESSURE) ) updatePublishRate(SENSOR_PRESSURE);
-    //  if ( updatePublishRateParam(params, SENSOR_WATERIN) ) updatePublishRate(SENSOR_WATERIN);//fbf 08-03-2012
+      if ( updatePublishRateParam(params, SENSOR_WATERIN) ) updatePublishRate(SENSOR_WATERIN);//fbf 08-03-2012
     }
     if ( updateInvertSpeedParams(params) ) {};
   }
