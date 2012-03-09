@@ -18,8 +18,6 @@
  * - @b pressure topic (srv_msgs/Pressure.pressure)
  *   Pressure sensor sample.
  *    
- * - @b humidity topic (srv_msgs/WaterIn.humidity) //fbf 08-03-2012
- *   humidity sensor sample.
  *  
  *
  * @par Subscribes
@@ -32,7 +30,6 @@
  * - \b "~rate_speeds"   : \b [double] Publishing rate for motor speeds topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
  * - \b "~rate_status"   : \b [double] Publishing rate for motor_status topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
  * - \b "~rate_pressure" : \b [double] Publishing rate for pressure topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
- * - \b "~rate_humidity" : \b [double] Publishing rate for humidity topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
  * - \b "~serial_port" : \b [str] Serial port device file name (including full path) min: , default: /dev/ttyS0, max: 
  * - \b "~pressure_offset" : \b [int] Pressure sensor offset. min: -32768, default: 0, max: 32767
  * - \b "~waterin_offset"  : \b [int] Water in sensor offset. min: -32768, default: 0, max: 32767
@@ -56,8 +53,6 @@ albatros_motor_board::MotorBoardNodeBase::MotorBoardNodeBase(const ros::NodeHand
   do_publish_[MOTOR_SPEEDS] = false;
   do_publish_[MOTOR_STATUS] = false;
   do_publish_[SENSOR_PRESSURE] = false;
-  do_publish_[SENSOR_WATERIN] = false; // fbf 08-03-2012 add new topic. If this variable is true, topic will be publish, otherwise it won't  
-  
 }
 
 void albatros_motor_board::MotorBoardNodeBase::advertiseMotorTopics()
@@ -79,14 +74,8 @@ void albatros_motor_board::MotorBoardNodeBase::advertiseSensorTopics()
   publisher_[SENSOR_PRESSURE] = node_.advertise<srv_msgs::Pressure>("pressure", 5,
                                                                     pressure_subs_cb,
                                                                     pressure_subs_cb);
-// fbf 08-03-2012 if no one is subscribed do not publish
-  ros::SubscriberStatusCallback waterin_subs_cb =
-      boost::bind(&MotorBoardNodeBase::subscriptionCallback, this, _1, SENSOR_WATERIN);
-  publisher_[SENSOR_WATERIN] = node_.advertise<srv_msgs::WaterIn>("humidity", 5,
-                                                                    waterin_subs_cb,
-                                                                    waterin_subs_cb);
-//end fbf 08-03-2012 
 }
+
 
 
 void albatros_motor_board::MotorBoardNodeBase::initDynParamsSrv()
@@ -173,12 +162,9 @@ void albatros_motor_board::MotorBoardNodeBase::getPublishRateParam(const OutTopi
       break;
     case SENSOR_PRESSURE :
       *rate = current_params_.rate_pressure;
-    case SENSOR_WATERIN: //fbf 9-03-2011
-      *rate=current_params_.rate_humidity;
       break;
   }
 } 
-
 
 template <typename T>
 bool albatros_motor_board::MotorBoardNodeBase::updateParam(T* old_val,
@@ -272,8 +258,6 @@ bool albatros_motor_board::MotorBoardNodeBase::updatePublishRateParam(const Moto
       break;
     case SENSOR_PRESSURE :
       res = updateParam(&(current_params_.rate_pressure),params.rate_pressure);
-    case SENSOR_WATERIN :
-      res = updateParam(&(current_params_.rate_humidity),params.rate_humidity); //fbf 09-03-2012
       break;
   }
   return res;
@@ -421,9 +405,6 @@ void albatros_motor_board::MotorBoardNodeBase::initialize(const MotorBoardDynPar
   updatePublishRate(MOTOR_STATUS);
   updatePublishRateParam(params, SENSOR_PRESSURE);
   updatePublishRate(SENSOR_PRESSURE);
-  updatePublishRateParam(params, SENSOR_WATERIN);
-  updatePublishRate(SENSOR_WATERIN);
-
 }
 
 void albatros_motor_board::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDynParamsConfig& params, uint32_t level)
@@ -448,7 +429,6 @@ void albatros_motor_board::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDy
       if ( updatePublishRateParam(params, MOTOR_SPEEDS)    ) updatePublishRate(MOTOR_SPEEDS);
       if ( updatePublishRateParam(params, MOTOR_STATUS)    ) updatePublishRate(MOTOR_STATUS);
       if ( updatePublishRateParam(params, SENSOR_PRESSURE) ) updatePublishRate(SENSOR_PRESSURE);
-      if ( updatePublishRateParam(params, SENSOR_WATERIN) ) updatePublishRate(SENSOR_WATERIN);//fbf 08-03-2012
     }
     if ( updateInvertSpeedParams(params) ) {};
   }
@@ -540,6 +520,13 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorPressure()
   {
     ros::Time stamp = ros::Time::now();
     int value;
+    double profundidad;
+// fbf 8-03-2012 retrieve the waterin info. 
+    mbctrl_.getSensorValue(mbctrl_.WATERIN, &value); 
+    waterin=int(value);
+    srv_msgs::waterin msgwaterin;
+        
+
     mbctrl_.getSensorValue(mbctrl_.PRESSURE, &value); 
     srv_msgs::Pressure msg;
     msg.header.stamp = stamp;
@@ -550,26 +537,7 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorPressure()
   {
     ROS_ERROR_STREAM("Error getting pressure : " << e.what());
   }
-if (do_publish_[SENSOR_WATERIN])
-  try
-  {
-    ros::Time stampW = ros::Time::now();
-    int valueH;
-// fbf 8-03-2012 retrieve the waterin info and publish in a topic 
-    mbctrl_.getSensorValue(mbctrl_.WATERIN, &valueH); 
-    srv_msgs::WaterIn msgwaterin;
-    msgwaterin.header.stamp=stampW;    
-    msgwaterin.humidity=int(valueH);  
-    publisher_[SENSOR_WATERIN].publish(msgwaterin);
-// fbf 08-03-2012  
-  }
-  catch (std::exception &e)
-  {
-    ROS_ERROR_STREAM("Error getting humidity : " << e.what());
-  }
-
 }
-
 
 void albatros_motor_board::MotorBoardNodeBase::subscriptionCallback(const ros::SingleSubscriberPublisher& ssp,
                                                                     const OutTopic& t)
