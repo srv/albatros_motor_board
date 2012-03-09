@@ -520,13 +520,6 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorPressure()
   {
     ros::Time stamp = ros::Time::now();
     int value;
-    double profundidad;
-// fbf 8-03-2012 retrieve the waterin info. 
-    mbctrl_.getSensorValue(mbctrl_.WATERIN, &value); 
-    waterin=int(value);
-    srv_msgs::waterin msgwaterin;
-        
-
     mbctrl_.getSensorValue(mbctrl_.PRESSURE, &value); 
     srv_msgs::Pressure msg;
     msg.header.stamp = stamp;
