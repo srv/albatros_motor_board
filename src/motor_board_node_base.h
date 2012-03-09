@@ -76,11 +76,11 @@ public:
 
 private:
 //fbf 08-03-2012 add the OutTopic SENSOR_WATERIN
-  enum OutTopic {MOTOR_SPEEDS, MOTOR_STATUS, SENSOR_PRESSURE};
-  static const int NUM_OUT_TOPICS = 3; // fbf 08-03-2012 increment the number of topics
+//  enum OutTopic {MOTOR_SPEEDS, MOTOR_STATUS, SENSOR_PRESSURE};
+//  static const int NUM_OUT_TOPICS = 3; // fbf 08-03-2012 increment the number of topics
 //fbf 08-03-2012 add the OutTopic SENSOR_WATERIN
-//  enum OutTopic {MOTOR_SPEEDS, MOTOR_STATUS, SENSOR_PRESSURE, SENSOR_WATERIN};
-//  static const int NUM_OUT_TOPICS = 4; // fbf 08-03-2012 increment the number of topics
+  enum OutTopic {MOTOR_SPEEDS, MOTOR_STATUS, SENSOR_PRESSURE, SENSOR_WATERIN};
+  static const int NUM_OUT_TOPICS = 4; // fbf 08-03-2012 increment the number of topics
   ros::NodeHandle node_;
   ros::NodeHandle priv_;
   ros::Subscriber subs_speeds_;
