@@ -155,6 +155,8 @@ private:
 
   void publishSensorPressure();
 
+  void publishSensorWaterIn();
+
   void subscriptionCallback(const ros::SingleSubscriberPublisher& ssp,
                             const OutTopic& t);
 

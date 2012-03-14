@@ -370,7 +370,7 @@ void albatros_motor_board::MotorBoardNodeBase::updatePublishRate(const OutTopic&
           cb = boost::bind(&MotorBoardNodeBase::publishSensorPressure, this);
           break;
 	case SENSOR_WATERIN :
-          cb = boost::bind(&MotorBoardNodeBase::publishSensorWaterIn, this);
+          cb = boost::bind(&MotorBoardNodeBase::publishSensorPressure, this);
           break;
       }
       publish_timer_[t] = node_.createTimer(ros::Duration(1.0 / rate), cb);
@@ -555,13 +555,6 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorPressure()
   {
     ROS_ERROR_STREAM("Error getting pressure : " << e.what());
   }
-
-}
-
-
-void albatros_motor_board::MotorBoardNodeBase::publishSensorWaterIn()
-{
-  
 if (do_publish_[SENSOR_WATERIN])
   try
   {
@@ -584,7 +577,7 @@ if (do_publish_[SENSOR_WATERIN])
 
 
 void albatros_motor_board::MotorBoardNodeBase::subscriptionCallback(const ros::SingleSubscriberPublisher& ssp,
-                                                                   const OutTopic& t)
+                                                                    const OutTopic& t)
 {
   if (publisher_[t].getNumSubscribers() == 0) // nobody is subscribed, so do not publish
     do_publish_[t] = false;
