@@ -18,6 +18,9 @@
  * - @b pressure topic (srv_msgs/Pressure)
  *   Pressure sensor sample.
  *
+ * - @b humidity topic (srv_msgs/WaterIn)
+ *   Humidity sensor sample.
+ *
  * @par Subscribes
  *
  * - @b speeds_pc (srv_msgs/MotorLevels)
@@ -46,6 +49,7 @@
 #include <ros/ros.h>
 #include <dynamic_reconfigure/server.h>
 #include <srv_msgs/Pressure.h>
+#include <srv_msgs/WaterIn.h>
 #include <srv_msgs/MotorLevels.h>
 #include "albatros_motor_board/MotorStatus.h"
 #include "albatros_motor_board/MotorBoardDynParamsConfig.h"
@@ -72,9 +76,8 @@ public:
 
 private:
 
-  enum OutTopic {MOTOR_SPEEDS, MOTOR_STATUS, SENSOR_PRESSURE};
-  static const int NUM_OUT_TOPICS = 3;
-
+  enum OutTopic {MOTOR_SPEEDS, MOTOR_STATUS, SENSOR_PRESSURE, SENSOR_WATERIN};
+  static const int NUM_OUT_TOPICS = 4;
   ros::NodeHandle node_;
   ros::NodeHandle priv_;
   ros::Subscriber subs_speeds_;
@@ -148,6 +151,8 @@ private:
   void publishMotorStatus();
 
   void publishSensorPressure();
+
+  void publishSensorWaterIn();
 
   void subscriptionCallback(const ros::SingleSubscriberPublisher& ssp,
                             const OutTopic& t);
