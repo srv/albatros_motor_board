@@ -1,45 +1,6 @@
 /**
  * @file
  * @brief ROS driver for Albatros motor board (presentation).
- *
- * This is a ROS driver for a motor board provided by Albatros.
- * It uses a library created for that device, that exposes its modules
- * (pressure and water-in sensors, and two motor pairs with its built-in PID controllers)
- * and handles communications through the serial port.
- *
- * @par Advertises
- *
- * - @b speeds_rpm (srv_msgs/MotorLevels)
- *   Current motor speeds in rpm.
- *
- * - @b status topic (albatros_motor_board/MotorStatus)
- *   Motor error counts.
- *
- * - @b pressure topic (srv_msgs/Pressure)
- *   Pressure sensor sample.
- *
- * - @b humidity topic (srv_msgs/WaterIn)
- *   Humidity sensor sample.
- *
- * @par Subscribes
- *
- * - @b speeds_pc (srv_msgs/MotorLevels)
- *   Desired speeds in percentage of device nominal speed.
- *
- * @par Parameters
- *
- * - \b "~rate_speeds"   : \b [double] Publishing rate for motor speeds topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
- * - \b "~rate_status"   : \b [double] Publishing rate for motor_status topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
- * - \b "~rate_pressure" : \b [double] Publishing rate for pressure topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
- * - \b "~serial_port" : \b [str] Serial port device file name (including full path) min: , default: /dev/ttyS0, max: 
- * - \b "~pressure_offset" : \b [int] Pressure sensor offset. min: -32768, default: 0, max: 32767
- * - \b "~waterin_offset"  : \b [int] Water in sensor offset. min: -32768, default: 0, max: 32767
- * - \b "~(forward|downward)_(left|right)_PID_on" : \b [bool]   front/down left/right PID state. min: False, default: False, max: True
- * - \b "~(forward|downward)_(left|right)_PID_Kp" : \b [double] front/down left/right PID proportional constant. min: -1.0, default: 0.0, max: 1.0
- * - \b "~(forward|downward)_(left|right)_PID_Ki" : \b [double] front/down left/right PID integral     constant. min: -1.0, default: 0.0, max: 1.0
- * - \b "~(forward|downward)_(left|right)_PID_Kd" : \b [double] front/down left/right PID derivative   constant. min: -1.0, default: 0.0, max: 1.0
- * - \b "~(forward|downward)_(left|right)_accel"  : \b [int]    front/down left/right acceleration (%/ds). min: 0, default: 5, max: 100
- * - \b "~(forward|downward)_(left|right)_invert" : \b [bool]   front/down left/right speed inversion. min: False, default: False, max: True
  */
 
 
@@ -58,6 +19,48 @@
 namespace albatros_motor_board
 {
 
+/**
+ * @brief ROS driver class for Albatros motor board.
+ *
+ * ROS driver class for a motor board provided by Albatros.
+ * It uses a library created for that device, that exposes its modules
+ * (pressure and water-in sensors, and two motor pairs with its built-in PID
+ * controllers), and handles communications through the serial port.
+ *
+ * @par Advertises
+ *
+ * - @b speeds_rpm (srv_msgs/MotorLevels)
+ *   Current motor speeds in rpm.
+ *
+ * - @b status (albatros_motor_board/MotorStatus)
+ *   Motor error counts.
+ *
+ * - @b pressure (srv_msgs/Pressure)
+ *   Pressure sensor sample.
+ *
+ * - @b humidity (srv_msgs/WaterIn)
+ *   Humidity sensor sample.
+ *
+ * @par Subscribes
+ *
+ * - @b speeds_pc (srv_msgs/MotorLevels)
+ *   Desired speeds in percentage of device nominal speed.
+ *
+ * @par Parameters
+ *
+ * - \b "~rate_speeds"   : \b [double] Publishing rate for motor speeds topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
+ * - \b "~rate_status"   : \b [double] Publishing rate for motor_status topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
+ * - \b "~rate_pressure" : \b [double] Publishing rate for pressure topic (0.0 disables publishing) min: 0.0, default: 10.0, max: 100.0
+ * - \b "~serial_port" : \b [str] Serial port device file name (including full path) min: , default: /dev/ttyS0, max:
+ * - \b "~pressure_offset" : \b [int] Pressure sensor offset. min: -32768, default: 0, max: 32767
+ * - \b "~waterin_offset"  : \b [int] Water in sensor offset. min: -32768, default: 0, max: 32767
+ * - \b "~(forward|downward)_(left|right)_PID_on" : \b [bool]   front/down left/right PID state. min: False, default: False, max: True
+ * - \b "~(forward|downward)_(left|right)_PID_Kp" : \b [double] front/down left/right PID proportional constant. min: -1.0, default: 0.0, max: 1.0
+ * - \b "~(forward|downward)_(left|right)_PID_Ki" : \b [double] front/down left/right PID integral     constant. min: -1.0, default: 0.0, max: 1.0
+ * - \b "~(forward|downward)_(left|right)_PID_Kd" : \b [double] front/down left/right PID derivative   constant. min: -1.0, default: 0.0, max: 1.0
+ * - \b "~(forward|downward)_(left|right)_accel"  : \b [int]    front/down left/right acceleration (%/ds). min: 0, default: 5, max: 100
+ * - \b "~(forward|downward)_(left|right)_invert" : \b [bool]   front/down left/right speed inversion. min: False, default: False, max: True
+ */
 class MotorBoardNodeBase
 {
 public:

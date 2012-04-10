@@ -1,7 +1,7 @@
 /**
  * @file
  * @brief ROS driver for Albatros motor board (nodelet version).
- * @see motor_board_node_base
+ * @see albatros_motor_board::MotorBoardNodeBase
  */
 
 

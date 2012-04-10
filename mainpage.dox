@@ -62,26 +62,14 @@ The console provides a simple shell alike command prompt.
 \section codeapi Code API
 
 The driver library is composed of three components:
-- The SerialComm class deals with the serial communication issues.
+- The serial::SerialComm class deals with the serial communication issues.
 - The command_msg module introduces the available commands and their format.
-- The MotorBoardCtrl class uses both previous components to interface a motor board device.
+- The albatros_motor_board::MotorBoardCtrl class uses both previous components to interface a motor board device.
 
-The ROS interface is provided in a base class 
+The ROS interface is provided in a base class albatros_motor_board::MotorBoardNodeBase,
 from which the node and nodelet versions are derived.
 
 The standalone console interface is included in the package 
 just to distribute it together with the library.
-
-<!--
-Provide links to specific auto-generated API documentation within your
-package that is of particular interest to a reader. Doxygen will
-document pretty much every part of your code, so do your best here to
-point the reader to the actual API.
-
-If your codebase is fairly large or has different sets of APIs, you
-should use the doxygen 'group' tag to keep these APIs together. For
-example, the roscpp documentation has 'libros' group.
--->
-
 
 */
