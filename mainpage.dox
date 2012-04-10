@@ -34,9 +34,9 @@ and has the following parts:
                        checksum of the values represented by cmd_id and payload
                        (the checksum is ignored in responses since it does not
                        seem to make sense: 2 bytes are not enough).
- - end_cmd   : "X\r" single 'X' char followed by carriage return '\r'
+ - end_cmd   : "X\r" single 'X' char followed by carriage return '\\r'
                        (the board sends responses line by line, and using
-                       carriage return character '\r' as end of line mark).
+                       carriage return character '\\r' as end of line mark).
 
 
 \section nodes Nodes and nodelets
