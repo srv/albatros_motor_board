@@ -109,11 +109,12 @@ private:
   //!@name Serial communication
   //@{
   SerialComm comm_;
-  static const SerialComm::E_DataBits commDataBits_ = SerialComm::DB8;
-  static const SerialComm::E_StopBits commStopBits_ = SerialComm::ONE_STOP_BIT;
-  static const SerialComm::E_Parity commParity_ = SerialComm::NO_PARITY;
-  static const unsigned long commBaudRate_ = 38400;
-  static const unsigned long commReadTimeout_ = 500;
+  static const SerialComm::E_DataBits COMM_DATA_BITS = SerialComm::DB8;
+  static const SerialComm::E_StopBits COMM_STOP_BITS = SerialComm::ONE_STOP_BIT;
+  static const SerialComm::E_Parity COMM_PARITY = SerialComm::NO_PARITY;
+  static const unsigned long COMM_BAUD_RATE = 38400;
+  static const unsigned long COMM_READ_TIMEOUT = 500;
+  static const unsigned long COMM_READ_RETRIES = 4;
   //@}
 };
 
