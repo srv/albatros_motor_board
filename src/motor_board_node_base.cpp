@@ -518,7 +518,7 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorWaterIn()
     mbctrl_.getSensorValue(mbctrl_.WATERIN, &value); 
     srv_msgs::WaterIn msg;
     msg.header.stamp = stamp;
-    msg.waterin = value;
+    msg.humidity = value;
     publisher_[SENSOR_WATERIN].publish(msg);
   }
   catch (std::exception &e)
