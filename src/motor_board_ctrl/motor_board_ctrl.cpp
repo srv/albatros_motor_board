@@ -38,12 +38,11 @@ void albatros_motor_board::MotorBoardCtrl::openComm(std::string dev_name)
     throw MotorBoardError("Error opening device " + dev_name + " ("
                           + strerror(status) + ")");
 
-  if (!(comm_.setBaudRate(commBaudRate_) && comm_.setDataBits(commDataBits_)
-      && comm_.setParity(commParity_) && comm_.setStopBits(commStopBits_)
-      && comm_.setReadTimeout(commReadTimeout_)))
+  if (!(comm_.setBaudRate(COMM_BAUD_RATE) && comm_.setDataBits(COMM_DATA_BITS)
+      && comm_.setParity(COMM_PARITY) && comm_.setStopBits(COMM_STOP_BITS)
+      && comm_.setReadTimeout(COMM_READ_TIMEOUT)))
     throw MotorBoardError("Error initializing device " + comm_.getDeviceName()
                           + "for serial communication ");
-
 }
 
 /**
@@ -91,18 +90,20 @@ std::string albatros_motor_board::MotorBoardCtrl::getCommName()
  */
 void albatros_motor_board::MotorBoardCtrl::readCommand(CmdMsg* cmd)
 {
-  unsigned long numBytesRead;
+  unsigned long num_bytes_read;
   int status = 0;
   bool success = false;
-  unsigned long totalBytesRead = 0;
-  for ( unsigned int numRetries = 4; (!success) && numRetries>0; numRetries-- )
+  unsigned long total_bytes_read = 0;
+  for ( unsigned int num_retries = COMM_READ_RETRIES;
+        (!success) && num_retries>0;
+        num_retries-- )
   {
-    success = comm_.readData( CMD_MSG_LENGTH - totalBytesRead, 
-                              (*cmd) + totalBytesRead, 
-                              numBytesRead, status);
-    totalBytesRead += numBytesRead;
+    success = comm_.readData( CMD_MSG_LENGTH - total_bytes_read, 
+                              (*cmd) + total_bytes_read, 
+                              num_bytes_read, status);
+    total_bytes_read += num_bytes_read;
   }
-  (*cmd)[totalBytesRead] = '\0'; // Add null character after the last character read.
+  (*cmd)[total_bytes_read] = '\0'; // Add null character after the last character read.
   if (!success)
     throw MotorBoardError(
         "Error reading command from " + comm_.getDeviceName()
@@ -137,7 +138,7 @@ void albatros_motor_board::MotorBoardCtrl::sendCommand(const CmdMsg& cmd)
  * functions. These calls raise an exception when errors
  */
 void albatros_motor_board::MotorBoardCtrl::queryCommand(const CmdMsg& request,
-                                              CmdMsg* response)
+                                                        CmdMsg* response)
 {
   //TODO: Check serial flush before sending the request
   flushComm();
