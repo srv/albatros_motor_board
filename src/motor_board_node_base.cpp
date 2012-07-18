@@ -499,6 +499,7 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorPressure()
     mbctrl_.getSensorValue(mbctrl_.PRESSURE, &value); 
     srv_msgs::Pressure msg;
     msg.header.stamp = stamp;
+    msg.header.frame_id = "/pressure_sensor";
     msg.pressure = double(value);
     publisher_[SENSOR_PRESSURE].publish(msg);
   }
