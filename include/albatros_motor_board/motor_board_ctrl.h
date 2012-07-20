@@ -76,6 +76,8 @@ public:
   typedef int MotorAccels[NUM_MOTORS];
   typedef int MotorStatus[NUM_MOTORS];
 
+  int saturation_value;
+
   void getSpeeds(MotorSpeeds* rpm);
   void setSpeeds(const MotorSpeeds& req_pc, MotorSpeeds* res_rpm=0);
   void getAccels(MotorAccels* pc);

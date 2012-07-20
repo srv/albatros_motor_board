@@ -71,6 +71,7 @@ void albatros_motor_board::MotorBoardNodeBase::getMotorCtrlParams(const MotorBoa
                                                                   bool *PID_on,
                                                                   MotorBoardCtrl::PIDConstants* PID_Kpid)
 {
+  mbctrl_.saturation_value = current_params_.saturation_value; // fbf 19-07-2012
   switch(m)
   {
     case MotorBoardCtrl::FORWARD_LEFT :
@@ -167,6 +168,7 @@ bool albatros_motor_board::MotorBoardNodeBase::updateMotorCtrlParams(const Motor
                                                                      const MotorBoardCtrl::Motor& m)
 {
   bool res = false;
+  res += updateParam(&(current_params_.saturation_value), params.saturation_value); // fbf 19-07-2012 update the saturation value
   switch(m)
   {
     case MotorBoardCtrl::FORWARD_LEFT :
@@ -540,6 +542,8 @@ void albatros_motor_board::MotorBoardNodeBase::subscriptionCallback(const ros::S
 void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_msgs::MotorLevelsConstPtr& msg)
 {
   const int num_motors = msg->levels.size();
+  int sat_value;
+  sat_value = mbctrl_.saturation_value;
   if ( num_motors != mbctrl_.NUM_MOTORS )
   {
     ROS_ERROR_STREAM("Wrong number of motors (" << num_motors
@@ -548,6 +552,24 @@ void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_ms
   }
   MotorBoardCtrl::MotorSpeeds speeds_pc;
   fillMotorSpeeds(msg, &speeds_pc);
+
+  // After some tests in Albatros, it came out that the system is no able to supply enought current when
+  // all four motors enter in short-circuit. To be in short circuit, motors have to receive motor commands
+  // between -X and X, passing through 0. In the transition from 0 to 0+-delta is when the motors requires more
+  // current to overcome the motor joint resistance. It would be convenient to saturate the response around the 0.
+  // the value of "sat_value" is experimental and responds to the
+  for (int i=0; i<num_motors; i++) // fbf 19-07-2012. if motor speed is in between -sat_Value/2  and sat_value/2, it becomes 0
+  {
+	  if ( speeds_pc[i]<(sat_value/2) && speeds_pc[i]>(-sat_value/2) ) // fbf 19-07-2012. if motor speed is in between -sat_Value/2  and -sat_value, it becomes -sat_value
+    	  {speeds_pc[i]=0; ROS_ERROR_STREAM("Saturating the command motor speed to 0");}
+
+	  if ( (abs(speeds_pc[i])>(sat_value/2)) && (abs(speeds_pc[i])<sat_value) ) // fbf 19-07-2012. if motor speed is in between sat_Value/2  and sat_value, it becomes sat_value
+  		  { ROS_ERROR_STREAM("Saturating the command motor speed to the saturation value");
+  		  if (speeds_pc[i]<0) speeds_pc[i]=-sat_value;
+  		  else speeds_pc[i]=sat_value;
+  		  }
+  }
+
   try
   {
     mbctrl_.setSpeeds(speeds_pc);
