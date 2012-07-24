@@ -211,10 +211,10 @@ void albatros_motor_board::MotorBoardCtrl::setSpeeds(const MotorSpeeds& req_pc,
   queryCommand(request,&response);
   if(!parseMotorSetDirectionSpeedResponse(response, &rpm16[0], &rpm16[1], &rpm16[2], &rpm16[3]) )
      throw MotorBoardError( "Error parsing set speed response : " + std::string(response) );
-  if (res_rpm)
+ // if (res_rpm)
     for (int i=0; i<NUM_MOTORS; i++)
     {
-      (*res_rpm)[i] = rpm16[i];
+   //   (*res_rpm)[i] = rpm16[i];
       printf("responses %i",rpm16[i]);
     }
 }
