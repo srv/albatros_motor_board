@@ -289,7 +289,7 @@ void albatros_motor_board::MotorBoardNodeBase::updateSensorOffset(MotorBoardCtrl
   ROS_INFO_STREAM("Sensor " << s << " offset response : " << offset);
 }
 
-void albatros_motor_board::MotorBoardNodeBase::updatePublishRate(const OutTopic& t)
+void albatros_motor_board::MotorBoardNodeBase::updatePublishRate(const OutTopic& t) // timer creation
 {
   double rate = 0.0;
   getPublishRateParam(t, &rate);
@@ -329,7 +329,8 @@ void albatros_motor_board::MotorBoardNodeBase::updatePublishRate(const OutTopic&
           cb = boost::bind(&MotorBoardNodeBase::publishSensorWaterIn, this);
           break;
       }
-      publish_timer_[t] = node_.createTimer(ros::Duration(1.0 / rate), cb);
+      publish_timer_[t] = node_.createTimer(ros::Duration(1.0 / rate), cb); // publish the corresponding topic at the
+      // times frequency indicated
     }
   }
 }
@@ -456,14 +457,14 @@ void albatros_motor_board::MotorBoardNodeBase::publishMotorSpeeds()
   if (do_publish_[MOTOR_SPEEDS])
   try
   {
-    MotorBoardCtrl::MotorSpeeds speeds_rpm;
-    mbctrl_.getSpeeds(&speeds_rpm);
+    MotorBoardCtrl::MotorSpeeds speeds_rpm; // new msg type MotorSpeeds
+    mbctrl_.getSpeeds(&speeds_rpm); // get current Motor Speeds from the motorboard and store them in the speeds_rpm variable
     ros::Time stamp = ros::Time::now();
-    srv_msgs::MotorLevelsPtr msg(new srv_msgs::MotorLevels());
+    srv_msgs::MotorLevelsPtr msg(new srv_msgs::MotorLevels()); // declare a new message type MotorLevels
     msg->header.stamp = stamp;
     msg->levels.resize(mbctrl_.NUM_MOTORS);
-    fillMotorSpeedsMsg(speeds_rpm, msg);
-    publisher_[MOTOR_SPEEDS].publish(msg);
+    fillMotorSpeedsMsg(speeds_rpm, msg); // insert the motor speeds read from the board into the MotorLevels msg
+    publisher_[MOTOR_SPEEDS].publish(msg); //publish the motor levels
   }
   catch (std::exception &e)
   {
@@ -551,6 +552,7 @@ void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_ms
                      << ") in update speed request, ignoring request.");
     return;
   }
+  printf("Capturing the motor levels message and sending them to the motor board");
   MotorBoardCtrl::MotorSpeeds speeds_pc;
   fillMotorSpeeds(msg, &speeds_pc);
 
@@ -562,10 +564,12 @@ void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_ms
   for (int i=0; i<num_motors; i++) // fbf 19-07-2012. if motor speed is in between -sat_Value/2  and sat_value/2, it becomes 0
   {
 	  if ( speeds_pc[i]<(sat_value/2) && speeds_pc[i]>(-sat_value/2) ) // fbf 19-07-2012. if motor speed is in between -sat_Value/2  and -sat_value, it becomes -sat_value
-    	  {speeds_pc[i]=0; ROS_ERROR_STREAM("Saturating the command motor speed to 0");}
+    	  {speeds_pc[i]=0; ROS_ERROR_STREAM("Saturating the command motor speed to 0");
+    	  printf("Saturating the command motor speed to 0");}
 
 	  if ( (abs(speeds_pc[i])>(sat_value/2)) && (abs(speeds_pc[i])<sat_value) ) // fbf 19-07-2012. if motor speed is in between sat_Value/2  and sat_value, it becomes sat_value
   		  { ROS_ERROR_STREAM("Saturating the command motor speed to the saturation value");
+  		  printf("Saturating the command motor speed to the saturation value");
   		  if (speeds_pc[i]<0) speeds_pc[i]=-sat_value;
   		  else speeds_pc[i]=sat_value;
   		  }

@@ -159,12 +159,12 @@ void albatros_motor_board::MotorBoardCtrl::getVersion(int* num)
 {
   CmdMsg request, response;
   uint8_t num8;
-  throw MotorBoardError( "sending request : get version"  );
+  throw MotorBoardError( "sending request: get version"  );
   if(!parseGetVersionRequest(&request))
-    throw MotorBoardError( "Error parsing get version request : " + std::string(request) );
+    throw MotorBoardError( "Error parsing get version request: " + std::string(request) );
   queryCommand(request,&response);
   if(!parseGetVersionResponse(response, &num8))
-    throw MotorBoardError( "Error parsing get version response : " + std::string(response) );
+    throw MotorBoardError( "Error parsing get version response: " + std::string(response) );
   *num = num8;
 }
 
