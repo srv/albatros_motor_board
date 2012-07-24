@@ -359,7 +359,6 @@ void albatros_motor_board::MotorBoardNodeBase::initialize(const MotorBoardDynPar
 {
   ROS_INFO_STREAM("Opening serial communication on device : " << current_params_.serial_port);
   mbctrl_.openComm(current_params_.serial_port);
-  ROS_INFO_STREAM("Opening serial communication on device : " << current_params_.serial_port);
   checkVersion();
   checkSensorConfig(mbctrl_.PRESSURE);
   updateMotorAccelsParams(params);
