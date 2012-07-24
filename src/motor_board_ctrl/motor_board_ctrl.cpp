@@ -17,6 +17,7 @@
 
 #include "motor_board_ctrl.h"
 #include <cstring>
+#include <stdio.h>
 
 
 /**
@@ -212,7 +213,10 @@ void albatros_motor_board::MotorBoardCtrl::setSpeeds(const MotorSpeeds& req_pc,
      throw MotorBoardError( "Error parsing set speed response : " + std::string(response) );
   if (res_rpm)
     for (int i=0; i<NUM_MOTORS; i++)
+    {
       (*res_rpm)[i] = rpm16[i];
+      printf("responses %i",rpm16[i]);
+    }
 }
 
 /**

@@ -551,7 +551,7 @@ void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_ms
                      << ") in update speed request, ignoring request.");
     return;
   }
-  printf("Capturing the motor levels message and sending them to the motor board");
+  //printf("Capturing the motor levels message and sending them to the motor board");
   MotorBoardCtrl::MotorSpeeds speeds_pc;
   fillMotorSpeeds(msg, &speeds_pc);
 
@@ -564,11 +564,12 @@ void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_ms
   {
 	  if ( speeds_pc[i]<(sat_value/2) && speeds_pc[i]>(-sat_value/2) ) // fbf 19-07-2012. if motor speed is in between -sat_Value/2  and -sat_value, it becomes -sat_value
     	  {speeds_pc[i]=0; ROS_ERROR_STREAM("Saturating the command motor speed to 0");
-    	  printf("Saturating the command motor speed to 0");}
+    	  //printf("Saturating the command motor speed to 0");
+    	  }
 
 	  if ( (abs(speeds_pc[i])>(sat_value/2)) && (abs(speeds_pc[i])<sat_value) ) // fbf 19-07-2012. if motor speed is in between sat_Value/2  and sat_value, it becomes sat_value
   		  { ROS_ERROR_STREAM("Saturating the command motor speed to the saturation value");
-  		  printf("Saturating the command motor speed to the saturation value");
+  		  //printf("Saturating the command motor speed to the saturation value");
   		  if (speeds_pc[i]<0) speeds_pc[i]=-sat_value;
   		  else speeds_pc[i]=sat_value;
   		  }
