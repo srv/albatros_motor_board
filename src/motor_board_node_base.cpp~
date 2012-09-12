@@ -612,8 +612,7 @@ void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_ms
       mbctrl_.setSpeeds(temp_speeds);
       usleep(350000);
     }
-    
-// send desired speeds 
+    // send desired speeds 
     for (int i = 0; i < num_motors; ++i)
     {
       if (change_direction[i])
