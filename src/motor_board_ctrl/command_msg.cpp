@@ -19,7 +19,9 @@
 #include "command_msg.h"
 #include <cstdio>
 #include <cstring>
-
+#include <math.h>
+#include <stdlib.h>
+using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 //!@addtogroup command
 //!@{
@@ -31,7 +33,7 @@ const albatros_motor_board::CmdId* albatros_motor_board::MODULE_CMD_ID[NUM_MODUL
                           };
 
 //! Command message format string according to the definition in header
-const char cmd_msg_fmt[] = "S%03x%016s%04xX\r";
+const char cmd_msg_fmt[] = "S%03x%016s%04xX\r"; // the messages to parse in or parse out will be formed by: hexa (3) + 16 (string) + 4 hexa 
 
 /**
  * @brief Compose a command request from the specified id, payload and checksum
@@ -95,7 +97,7 @@ bool albatros_motor_board::parseLedGetImaxRequest(CmdMsg* req)
   CmdPayload payload;
   const int n = sprintf(payload, "%0*x", CMD_MSG_PAYLOAD_LENGTH, 0);
   if (n == CMD_MSG_PAYLOAD_LENGTH)
-    return parseRequest(req, id, payload, checksum);
+    return parseRequest(req, id, payload, checksum); // mount the request in serial format
   else
     return false;
 }
@@ -483,7 +485,7 @@ bool albatros_motor_board::parseMotorGetDeviceConfigResponse(const CmdMsg& res,
 }
 
 /**
- * @brief Compose request to set motors' speeds
+ * @brief Compose request to set motors' speeds   ====> MODIFICAR : FBF 18-06-2012 : limitar zonas sin respuesta
  * @param req request to compose
  * @param rpm_pc0 motor 0 speed (+/-% of nominal motor speed)
  * @param rpm_pc1 motor 1 speed (+/-% of nominal motor speed)
@@ -493,6 +495,7 @@ bool albatros_motor_board::parseMotorGetDeviceConfigResponse(const CmdMsg& res,
  *
  * No check is done to assert that arguments are in range 0..100.
  * The response to this command provides the speed in rpm instead of %.
+ * fbf 19-07-2012: add the variable saturation_value to saturate the requested speeds if they are between -X and X
  */
 bool albatros_motor_board::parseMotorSetDirectionSpeedRequest(CmdMsg* req,
                                                               int8_t rpm_pc0,
@@ -501,11 +504,53 @@ bool albatros_motor_board::parseMotorSetDirectionSpeedRequest(CmdMsg* req,
                                                               int8_t rpm_pc3)
 {
   const CmdId id = MODULE_CMD_ID[MOTOR][MOTOR_SET_DIRECTION_SPEED];
+
+  /*if ( rpm_pc0<(sat_value/2) && rpm_pc0>(-sat_value/2) )
+  	  rpm_pc0=0; // speeds between -sat_Value/2 and sat_Value/2  are converted to 0
+
+    if ( (abs(rpm_pc0))>(sat_value/2) && (abs(rpm_pc0))<(sat_value) )
+      {
+    	  if (rpm_pc0>0) rpm_pc0=sat_value; //speeds between sat_Value/2 and sat_Value  are converted to Sat_value
+    	  else rpm_pc0=-sat_value;  //speeds between -sat_Value/2 and -sat_Value  are converted to -Sat_value
+      }
+
+    if ( rpm_pc1<(sat_value/2) && rpm_pc1>(-sat_value/2) )
+      {
+    	  rpm_pc1=0;
+      }
+
+    if ( abs(rpm_pc1)>(sat_value/2) && abs(rpm_pc1)<(sat_value) )
+        {
+      	  if (rpm_pc1>0) rpm_pc1=sat_value; //speeds between sat_Value/2 and sat_Value  are converted to Sat_value
+      	  else rpm_pc1=-sat_value;  //speeds between -sat_Value/2 and -sat_Value  are converted to -Sat_value
+        }
+
+    if ( rpm_pc2<(sat_value/2) && rpm_pc2>(-sat_value/2) )
+      {
+    	  rpm_pc2=0;
+      }
+
+    if ( abs(rpm_pc2)>(sat_value/2) && abs(rpm_pc2)<(sat_value) )
+        {
+      	  if (rpm_pc2>0) rpm_pc2=sat_value; //speeds between sat_Value/2 and sat_Value  are converted to Sat_value
+      	  else rpm_pc2=-sat_value;  //speeds between -sat_Value/2 and -sat_Value  are converted to -Sat_value
+        }
+
+    if ( rpm_pc3<(sat_value/2) && rpm_pc3>(-sat_value/2) )
+      {
+    	  rpm_pc3=0;
+      }
+
+    if ( abs(rpm_pc3)>(sat_value/2) && abs(rpm_pc3)<(sat_value) )
+        {
+      	  if (rpm_pc3>0) rpm_pc3=sat_value; //speeds between sat_Value/2 and sat_Value  are converted to Sat_value
+      	  else rpm_pc3=-sat_value;  //speeds between -sat_Value/2 and -sat_Value  are converted to -Sat_value
+        }*/
   // bitwise-AND promotes the left argument to unsigned (because the other one
   // is unsigned) and sets the most significant bits to zero
   const unsigned int val0 = rpm_pc0 & 0xFF;
   const unsigned int val1 = rpm_pc1 & 0xFF;
-  const unsigned int val2 = rpm_pc2 & 0xFF;
+  const unsigned int val2 = rpm_pc2 & 0xFF; // FBF 19-06-2012 QUINS VALORS ARRIBEN D'AQUI ??
   const unsigned int val3 = rpm_pc3 & 0xFF;
   const CmdChecksum checksum = id + val0 + val1 + val2 + val3;
   CmdPayload payload;

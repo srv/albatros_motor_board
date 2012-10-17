@@ -16,7 +16,7 @@
  * and provide functions to parse the request/response messages for each module
  * command.
  *
- * A message is a character sequence of the form: "S0120123456789abcdef0123X\r"
+ * A message is a character sequence of the form: "S 012 0123456789abcdef 0123X\r"
  * and has the following parts:
  *
  * - start_cmd : "S" single 'S' char
@@ -267,9 +267,9 @@ bool parseMotorGetDeviceConfigResponse(const CmdMsg& res,
                                        uint16_t* no_load_speed_rpm,
                                        uint16_t* rated_current_ma);
 
-bool parseMotorSetDirectionSpeedRequest(CmdMsg* req,
-                                        int8_t rpm_pc0, int8_t rpm_pc1,
-                                        int8_t rpm_pc2, int8_t rpm_pc3);
+bool parseMotorSetDirectionSpeedRequest(CmdMsg* req, int8_t rpm_pc0, int8_t rpm_pc1, int8_t rpm_pc2, int8_t rpm_pc3);
+
+
 bool parseMotorSetDirectionSpeedResponse(const CmdMsg& res,
                                          int16_t* rpm0, int16_t* rpm1,
                                          int16_t* rpm2, int16_t* rpm3);
