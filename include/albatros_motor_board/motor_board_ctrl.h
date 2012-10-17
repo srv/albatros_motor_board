@@ -71,6 +71,8 @@ public:
   //! Motor selection
   enum Motor {FORWARD_LEFT=0, FORWARD_RIGHT, DOWNWARD_LEFT, DOWNWARD_RIGHT};
   static const int NUM_MOTORS = 4;
+  static const int MAX_MOTOR_SPEED = 100;
+  static const int MIN_MOTOR_SPEED = -100;
 
   typedef int MotorSpeeds[NUM_MOTORS];
   typedef int MotorAccels[NUM_MOTORS];

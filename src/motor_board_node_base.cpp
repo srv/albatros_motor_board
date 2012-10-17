@@ -429,6 +429,40 @@ void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeeds(const srv_msgs::M
   (*s)[mbctrl_.DOWNWARD_RIGHT] = (current_params_.downward_right_invert)
                                    ? -m->levels[mbctrl_.DOWNWARD_RIGHT]
                                    : +m->levels[mbctrl_.DOWNWARD_RIGHT];
+
+  bool scaling_required = false;
+  int max_speed = 0;
+  int min_speed = 0;
+  for (int i = 0; i < MotorBoardCtrl::NUM_MOTORS; ++i)
+  {
+    if ((*s)[i] > MotorBoardCtrl::MAX_MOTOR_SPEED || (*s)[i] < MotorBoardCtrl::MIN_MOTOR_SPEED)
+      scaling_required = true;
+    if ((*s)[i] < min_speed)
+      min_speed = (*s)[i];
+    if ((*s)[i] > max_speed)
+      max_speed = (*s)[i];
+  }
+  if (scaling_required)
+  {
+    double scale_factor = 
+      std::min(1.0 * MotorBoardCtrl::MAX_MOTOR_SPEED / max_speed, 
+               1.0 * MotorBoardCtrl::MIN_MOTOR_SPEED / min_speed);
+    std::ostringstream before;
+    std::ostringstream after;
+    for (int i = 0; i < MotorBoardCtrl::NUM_MOTORS; ++i)
+    {
+      if (i != 0)
+      {
+        before << ",";
+        after << ",";
+      }
+      before << (*s)[i];
+      (*s)[i] *= scale_factor;
+      after << (*s)[i];
+    }
+    ROS_WARN_STREAM("Motors are at speed limits, rescaled speeds: (" << 
+        before.str() << ") -> (" << after.str() << ")");
+  }
 }
 
 void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeedsMsg(const MotorBoardCtrl::MotorSpeeds& s,
