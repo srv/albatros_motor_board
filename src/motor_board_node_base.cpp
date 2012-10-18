@@ -447,9 +447,9 @@ void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeeds(const srv_msgs::M
   }
   if (scaling_required)
   {
-    double scale_factor = 
-      std::min(1.0 * MotorBoardCtrl::MAX_MOTOR_SPEED / max_speed, 
-               1.0 * MotorBoardCtrl::MIN_MOTOR_SPEED / min_speed);
+    double scale_max = max_speed != 0 ? 1.0 * MotorBoardCtrl::MAX_MOTOR_SPEED / max_speed : 1.0;
+    double scale_min = min_speed != 0 ? 1.0 * MotorBoardCtrl::MIN_MOTOR_SPEED / min_speed : 1.0;
+    double scale_factor = std::min(scale_max, scale_min);
     std::ostringstream before;
     std::ostringstream after;
     for (int i = 0; i < MotorBoardCtrl::NUM_MOTORS; ++i)
@@ -577,8 +577,7 @@ void albatros_motor_board::MotorBoardNodeBase::subscriptionCallback(const ros::S
 void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_msgs::MotorLevelsConstPtr& msg)
 {
   const int num_motors = msg->levels.size();
-  int sat_value;
-  sat_value = mbctrl_.saturation_value;
+  int sat_value = mbctrl_.saturation_value;
   if ( num_motors != mbctrl_.NUM_MOTORS )
   {
     ROS_ERROR_STREAM("Wrong number of motors (" << num_motors
