@@ -615,9 +615,9 @@ void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_ms
     // check for zero crossings first
     MotorBoardCtrl::MotorSpeeds current_speeds;
     mbctrl_.getSpeeds(&current_speeds);
-    ROS_INFO("current speeds %i %i %i %i", 
+    ROS_DEBUG("current speeds %i %i %i %i", 
       current_speeds[0], current_speeds[1], current_speeds[2], current_speeds[3]);
-    ROS_INFO("requested speeds %i %i %i %i", 
+    ROS_DEBUG("requested speeds %i %i %i %i", 
       speeds_pc[0], speeds_pc[1], speeds_pc[2], speeds_pc[3]);
 
 
