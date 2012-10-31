@@ -640,7 +640,7 @@ void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_ms
 
     if (has_direction_change) // if one of the motor changes direction of turn, send corresponding speeds wiht the zeros 
     {
-      ROS_INFO("sending speeds %i %i %i %i", 
+      ROS_DEBUG("sending speeds %i %i %i %i", 
         temp_speeds[0], temp_speeds[1], temp_speeds[2], temp_speeds[3]);
       mbctrl_.setSpeeds(temp_speeds);
       usleep(350000);
@@ -654,7 +654,7 @@ void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_ms
         temp_speeds[i] = speeds_pc[i];
 
       }
-      ROS_INFO("no change direction sending speeds %i %i %i %i", 
+      ROS_DEBUG("no change direction sending speeds %i %i %i %i", 
           temp_speeds[0], temp_speeds[1], temp_speeds[2], temp_speeds[3]);
       mbctrl_.setSpeeds(temp_speeds);
       usleep(50000);
