@@ -11,7 +11,7 @@ int main(int argc, char **argv)
   // ROS initialization
   ros::init(argc, argv, "motor_board_node");
 
-  ros::NodeHandle node("motor_board");
+  ros::NodeHandle node;
   ros::NodeHandle priv("~");
   albatros_motor_board::MotorBoardNodeBase mb_node(node,priv);
 
