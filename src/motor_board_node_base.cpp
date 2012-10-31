@@ -22,11 +22,11 @@ void albatros_motor_board::MotorBoardNodeBase::advertiseMotorTopics()
   ros::SubscriberStatusCallback speeds_subs_cb =
       boost::bind(&MotorBoardNodeBase::subscriptionCallback, this, _1, MOTOR_SPEEDS);
   publisher_[MOTOR_SPEEDS] =
-      node_.advertise<srv_msgs::MotorLevels>("speeds_rpm", 5, speeds_subs_cb, speeds_subs_cb);
+      node_.advertise<srv_msgs::MotorLevels>("motor_speeds", 5, speeds_subs_cb, speeds_subs_cb);
   ros::SubscriberStatusCallback status_subs_cb =
       boost::bind(&MotorBoardNodeBase::subscriptionCallback, this, _1, MOTOR_STATUS);
   publisher_[MOTOR_STATUS] =
-      node_.advertise<albatros_motor_board::MotorStatus>("status", 5, status_subs_cb, status_subs_cb);
+      node_.advertise<albatros_motor_board::MotorStatus>("motor_status", 5, status_subs_cb, status_subs_cb);
 }
 
 void albatros_motor_board::MotorBoardNodeBase::advertiseSensorTopics()
@@ -50,7 +50,7 @@ void albatros_motor_board::MotorBoardNodeBase::initDynParamsSrv()
 
 void albatros_motor_board::MotorBoardNodeBase::subscribeMotorTopics()
 {
-  subs_speeds_ = node_.subscribe("speeds_pc",1, &MotorBoardNodeBase::updateSpeedsCallback, this);
+  subs_speeds_ = node_.subscribe("motor_levels",1, &MotorBoardNodeBase::updateSpeedsCallback, this);
 }
 
 void albatros_motor_board::MotorBoardNodeBase::cleanUp()
