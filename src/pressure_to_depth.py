@@ -15,11 +15,12 @@ class PressureToDepthNode():
   def __init__(self):
     self.pub = rospy.Publisher('depth', Depth)
     self.k = 0.068046
+    self.offset = rospy.get_param('~offset', 0.0)
     rospy.Subscriber('pressure', Pressure, self.callback)
     rospy.spin()
 
   def callback(self, pressure):
-    depth = pressure.pressure / 100 * self.k - 10
+    depth = pressure.pressure / 100 * self.k - 10 + self.offset
     self.pub.publish(pressure.header, depth)
 
 if __name__ == "__main__":
