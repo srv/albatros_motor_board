@@ -9,9 +9,9 @@
 
 #include <ros/ros.h>
 #include <dynamic_reconfigure/server.h>
-#include <srv_msgs/Pressure.h>
-#include <srv_msgs/WaterIn.h>
-#include <srv_msgs/MotorLevels.h>
+#include <auv_sensor_msgs/Pressure.h>
+#include <auv_sensor_msgs/Humidity.h>
+#include <auv_control_msgs/MotorLevels.h>
 #include "albatros_motor_board/MotorStatus.h"
 #include "albatros_motor_board/MotorBoardDynParamsConfig.h"
 #include "albatros_motor_board/motor_board_ctrl.h"
@@ -29,21 +29,21 @@ namespace albatros_motor_board
  *
  * @par Advertises
  *
- * - @b speeds_rpm (srv_msgs/MotorLevels)
+ * - @b speeds_rpm (auv_control_msgs/MotorLevels)
  *   Current motor speeds in rpm.
  *
  * - @b status (albatros_motor_board/MotorStatus)
  *   Motor error counts.
  *
- * - @b pressure (srv_msgs/Pressure)
+ * - @b pressure (auv_sensor_msgs/Pressure)
  *   Pressure sensor sample.
  *
- * - @b humidity (srv_msgs/WaterIn)
+ * - @b humidity (auv_sensor_msgs/Humidity)
  *   Humidity sensor sample.
  *
  * @par Subscribes
  *
- * - @b speeds_pc (srv_msgs/MotorLevels)
+ * - @b speeds_pc (auv_control_msgs/MotorLevels)
  *   Desired speeds in percentage of device nominal speed.
  *
  * @par Parameters
@@ -143,11 +143,11 @@ private:
   void dynReconfigureParams(MotorBoardDynParamsConfig& params,
                             uint32_t level);
 
-  void fillMotorSpeeds(const srv_msgs::MotorLevelsConstPtr& m,
+  void fillMotorSpeeds(const auv_control_msgs::MotorLevelsConstPtr& m,
                        MotorBoardCtrl::MotorSpeeds* s) const;
 
   void fillMotorSpeedsMsg(const MotorBoardCtrl::MotorSpeeds& s,
-                          const srv_msgs::MotorLevelsPtr& m ) const;
+                          const auv_control_msgs::MotorLevelsPtr& m ) const;
 
   void publishMotorSpeeds();
 
@@ -160,7 +160,7 @@ private:
   void subscriptionCallback(const ros::SingleSubscriberPublisher& ssp,
                             const OutTopic& t);
 
-  void updateSpeedsCallback(const srv_msgs::MotorLevelsConstPtr& msg);
+  void updateSpeedsCallback(const auv_control_msgs::MotorLevelsConstPtr& msg);
 
 };
 

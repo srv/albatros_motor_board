@@ -22,7 +22,7 @@ void albatros_motor_board::MotorBoardNodeBase::advertiseMotorTopics()
   ros::SubscriberStatusCallback speeds_subs_cb =
       boost::bind(&MotorBoardNodeBase::subscriptionCallback, this, _1, MOTOR_SPEEDS);
   publisher_[MOTOR_SPEEDS] =
-      node_.advertise<srv_msgs::MotorLevels>("motor_speeds", 5, speeds_subs_cb, speeds_subs_cb);
+      node_.advertise<auv_control_msgs::MotorLevels>("motor_speeds", 5, speeds_subs_cb, speeds_subs_cb);
   ros::SubscriberStatusCallback status_subs_cb =
       boost::bind(&MotorBoardNodeBase::subscriptionCallback, this, _1, MOTOR_STATUS);
   publisher_[MOTOR_STATUS] =
@@ -33,12 +33,12 @@ void albatros_motor_board::MotorBoardNodeBase::advertiseSensorTopics()
 {
   ros::SubscriberStatusCallback pressure_subs_cb =
       boost::bind(&MotorBoardNodeBase::subscriptionCallback, this, _1, SENSOR_PRESSURE);
-  publisher_[SENSOR_PRESSURE] = node_.advertise<srv_msgs::Pressure>("pressure", 5,
+  publisher_[SENSOR_PRESSURE] = node_.advertise<auv_sensor_msgs::Pressure>("pressure", 5,
                                                                     pressure_subs_cb,
                                                                     pressure_subs_cb);
   ros::SubscriberStatusCallback waterin_subs_cb =
       boost::bind(&MotorBoardNodeBase::subscriptionCallback, this, _1, SENSOR_WATERIN);
-  publisher_[SENSOR_WATERIN] = node_.advertise<srv_msgs::WaterIn>("humidity", 5,
+  publisher_[SENSOR_WATERIN] = node_.advertise<auv_sensor_msgs::Humidity>("humidity", 5,
                                                                   waterin_subs_cb,
                                                                   waterin_subs_cb);
 }
@@ -417,7 +417,7 @@ void albatros_motor_board::MotorBoardNodeBase::dynReconfigureParams(MotorBoardDy
   }
 }
 
-void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeeds(const srv_msgs::MotorLevelsConstPtr& m,
+void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeeds(const auv_control_msgs::MotorLevelsConstPtr& m,
                                                                MotorBoardCtrl::MotorSpeeds* s) const
 {
   (*s)[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
@@ -469,7 +469,7 @@ void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeeds(const srv_msgs::M
 }
 
 void albatros_motor_board::MotorBoardNodeBase::fillMotorSpeedsMsg(const MotorBoardCtrl::MotorSpeeds& s,
-                                                                  const srv_msgs::MotorLevelsPtr& m ) const
+                                                                  const auv_control_msgs::MotorLevelsPtr& m ) const
 {
   m->levels[mbctrl_.FORWARD_LEFT]   = (current_params_.forward_left_invert)
                                                ? -s[mbctrl_.FORWARD_LEFT]
@@ -493,7 +493,7 @@ void albatros_motor_board::MotorBoardNodeBase::publishMotorSpeeds()
     MotorBoardCtrl::MotorSpeeds speeds_rpm; // new msg type MotorSpeeds
     mbctrl_.getSpeeds(&speeds_rpm); // get current Motor Speeds from the motorboard and store them in the speeds_rpm variable
     ros::Time stamp = ros::Time::now();
-    srv_msgs::MotorLevelsPtr msg(new srv_msgs::MotorLevels()); // declare a new message type MotorLevels
+    auv_control_msgs::MotorLevelsPtr msg(new auv_control_msgs::MotorLevels()); // declare a new message type MotorLevels
     msg->header.stamp = stamp;
     msg->levels.resize(mbctrl_.NUM_MOTORS);
     fillMotorSpeedsMsg(speeds_rpm, msg); // insert the motor speeds read from the board into the MotorLevels msg
@@ -534,7 +534,7 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorPressure()
     ros::Time stamp = ros::Time::now();
     int value;
     mbctrl_.getSensorValue(mbctrl_.PRESSURE, &value); 
-    srv_msgs::Pressure msg;
+    auv_sensor_msgs::Pressure msg;
     msg.header.stamp = stamp;
     msg.header.frame_id = "/pressure_sensor";
     msg.pressure = double(value);
@@ -554,7 +554,7 @@ void albatros_motor_board::MotorBoardNodeBase::publishSensorWaterIn()
     ros::Time stamp = ros::Time::now();
     int value;
     mbctrl_.getSensorValue(mbctrl_.WATERIN, &value); 
-    srv_msgs::WaterIn msg;
+    auv_sensor_msgs::Humidity msg;
     msg.header.stamp = stamp;
     msg.humidity = value;
     publisher_[SENSOR_WATERIN].publish(msg);
@@ -574,7 +574,7 @@ void albatros_motor_board::MotorBoardNodeBase::subscriptionCallback(const ros::S
     do_publish_[t] = true;
 }
 
-void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const srv_msgs::MotorLevelsConstPtr& msg)
+void albatros_motor_board::MotorBoardNodeBase::updateSpeedsCallback(const auv_control_msgs::MotorLevelsConstPtr& msg)
 {
   const int num_motors = msg->levels.size();
   int sat_value = mbctrl_.saturation_value;

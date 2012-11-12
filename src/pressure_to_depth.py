@@ -2,7 +2,7 @@
 
 import roslib; roslib.load_manifest('albatros_motor_board')
 import rospy
-from srv_msgs.msg import Pressure, Depth
+from auv_sensor_msgs.msg import Pressure, Depth
 
 class PressureToDepthNode():
   """

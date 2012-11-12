@@ -15,7 +15,8 @@
   <depend package="std_msgs"/>
   <depend package="driver_base"/>
   <depend package="dynamic_reconfigure" />
-  <depend package="srv_msgs" />
+  <depend package="auv_sensor_msgs" />
+  <depend package="auv_control_msgs" />
   <depend package="nodelet" />
 
   <export>
