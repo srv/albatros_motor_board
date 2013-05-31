@@ -1,60 +1,45 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+cmake_minimum_required(VERSION 2.8.3)
+project(albatros_motor_board)
+find_package(catkin REQUIRED COMPONENTS roscpp std_msgs driver_base dynamic_reconfigure auv_sensor_msgs auv_control_msgs nodelet message_generation)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+add_message_files(
+  DIRECTORY
+  msg
+  FILES
+  MotorStatus.msg
+)
 
-# Default compile flags are "-W -Wall -Wno-unused-parameter -fno-strict-aliasing" 
-# Uncomment the following line to turn on higher warnings
-# set(ROS_COMPILE_FLAGS "-W -Wall -Wextra -pedantic")
-rosbuild_init()
+generate_messages(
+  DEPENDENCIES std_msgs
+)
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+generate_dynamic_reconfigure_options(cfg/MotorBoardDynParams.cfg)
 
-#uncomment if you have defined messages
-rosbuild_genmsg()
-#uncomment if you have defined services
-#rosbuild_gensrv()
+catkin_package(
+  INCLUDE_DIRS include
+  CATKIN_DEPENDS message_runtime
+  LIBRARIES motor_board_ctrl)
 
-#add dynamic reconfigure api
-rosbuild_find_ros_package(dynamic_reconfigure)
-include(${dynamic_reconfigure_PACKAGE_PATH}/cmake/cfgbuild.cmake)
-gencfg()
+# <cpp lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lmotor_board_ctrl" cflags="-I${prefix}/include"/>
 
-#common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
-#rosbuild_add_boost_directories()
-#rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
+include_directories(include cfg/cpp ${catkin_INCLUDE_DIRECTORIES})
 
-include_directories(${PROJECT_SOURCE_DIR}/include/albatros_motor_board)
+add_library(motor_board_ctrl
+            src/motor_board_ctrl/motor_board_ctrl.cpp
+            src/motor_board_ctrl/serial_comm.cpp
+            src/motor_board_ctrl/command_msg.cpp)
 
-rosbuild_add_library(motor_board_ctrl
-                       src/motor_board_ctrl/motor_board_ctrl.cpp
-                       src/motor_board_ctrl/serial_comm.cpp
-                       src/motor_board_ctrl/command_msg.cpp)
+add_executable(motor_board_console
+               src/motor_board_console/motor_board_console.cpp
+               src/motor_board_console/simple_shell.cpp)
+target_link_libraries(motor_board_console motor_board_ctrl ${catkin_LIBRARIES})
 
-rosbuild_add_executable(motor_board_console
-                          src/motor_board_console/motor_board_console.cpp
-                          src/motor_board_console/simple_shell.cpp)
-target_link_libraries(motor_board_console motor_board_ctrl)
+add_executable(motor_board_node
+               src/motor_board_node.cpp
+               src/motor_board_node_base.cpp)
+target_link_libraries(motor_board_node  motor_board_ctrl ${catkin_LIBRARIES})
 
-rosbuild_add_executable(motor_board_node
-                          src/motor_board_node.cpp
-                          src/motor_board_node_base.cpp)
-target_link_libraries(motor_board_node  motor_board_ctrl)
-
-rosbuild_add_library(motor_board_nodelet
-                       src/motor_board_nodelet.cpp
-                       src/motor_board_node_base.cpp)
-target_link_libraries(motor_board_nodelet motor_board_ctrl)
+add_library(motor_board_nodelet
+            src/motor_board_nodelet.cpp
+            src/motor_board_node_base.cpp)
+target_link_libraries(motor_board_nodelet motor_board_ctrl ${catkin_LIBRARIES})

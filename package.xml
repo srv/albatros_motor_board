@@ -1,0 +1,45 @@
+<package>
+  <name>albatros_motor_board</name>
+  <version>0.0.1</version>
+  <description>This package contains a driver library and a ROS interface 
+     to manage a motor board provided by Albatros.
+     The motor board is equipped with sensors (water-in and pressure) and four motors.
+     Communications with the motor board are through a serial port.</description>
+  <maintainer email="miquel.massot@uib.cat">Miquel Massot</maintainer>
+
+  <license>GPL</license>
+
+  <url type="website">http://ros.org/wiki/albatros_motor_board</url>
+
+  <author>Joan Pau Beltran</author>
+
+  <buildtool_depend> catkin </buildtool_depend>
+
+  <build_depend>roscpp</build_depend> 
+  <build_depend>std_msgs</build_depend> 
+  <build_depend>driver_base</build_depend> 
+  <build_depend>dynamic_reconfigure</build_depend> 
+  <build_depend>auv_sensor_msgs</build_depend> 
+  <build_depend>auv_control_msgs</build_depend> 
+  <build_depend>nodelet</build_depend>
+  <build_depend>message_generation</build_depend>
+  <run_depend>roscpp</run_depend> 
+  <run_depend>std_msgs</run_depend> 
+  <run_depend>driver_base</run_depend> 
+  <run_depend>dynamic_reconfigure</run_depend> 
+  <run_depend>auv_sensor_msgs</run_depend> 
+  <run_depend>auv_control_msgs</run_depend> 
+  <run_depend>nodelet</run_depend> 
+  <run_depend>message_runtime</run_depend> 
+  <!-- <test_depend>roscpp</test_depend> -->
+  <!-- <test_depend>std_msgs</test_depend> -->
+  <!-- <test_depend>driver_base</test_depend> -->
+  <!-- <test_depend>dynamic_reconfigure</test_depend> -->
+  <!-- <test_depend>auv_sensor_msgs</test_depend> -->
+  <!-- <test_depend>auv_control_msgs</test_depend> -->
+  <!-- <test_depend>nodelet</test_depend> -->
+
+  <export>
+    <nodelet plugin="${prefix}/nodelet/nodelet_plugins.xml"/>
+  </export>
+</package>

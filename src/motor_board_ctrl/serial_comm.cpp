@@ -5,7 +5,7 @@
  * @note Based on original version from ckonvalin for the Memsense IMU driver.
  */
 
-#include "serial_comm.h"
+#include <albatros_motor_board/serial_comm.h>
 #include <cerrno>
 #include <cstdlib>
 #include <fcntl.h>

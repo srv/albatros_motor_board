@@ -15,7 +15,7 @@
  */
 
 
-#include "motor_board_ctrl.h"
+#include <albatros_motor_board/motor_board_ctrl.h>
 #include <cstring>
 #include <stdio.h>
 

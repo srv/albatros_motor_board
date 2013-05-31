@@ -10,8 +10,8 @@
 // #include <signal.h>
 
 #include "simple_shell.h"
-#include "command_msg.h"
-#include "motor_board_ctrl.h"
+#include <albatros_motor_board/command_msg.h>
+#include <albatros_motor_board/motor_board_ctrl.h>
 
 // Global variables
 

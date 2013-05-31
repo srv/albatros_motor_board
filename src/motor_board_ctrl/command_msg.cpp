@@ -16,7 +16,7 @@
  * but may be implementation dependent and hence not portable.
  */
 
-#include "command_msg.h"
+#include <albatros_motor_board/command_msg.h>
 #include <cstdio>
 #include <cstring>
 #include <math.h>
