@@ -1,0 +1,88 @@
+"S%03x%016s%04xX\r": command messages serial format -->  frame start character: "S"; frame end character: "X". In between: 
+	3 bytes representing the commnad id in Hexa; 16 characters meaning the payload + 4 bytes to show the checksum (in Hexa)
+
+
+
+parseRequest : serializes all data of a certain request to the motor board using the format specified above. 
+parseResponse: takes a serial data set of bytes comming from the motor board and recovers the command, payload and checksum according to the format specified above.  
+
+
+LED COMMANDS: 
+
+parseLedGetImaxRequest: compose a request in serial format (parseRequest) to know the led's maximum intensities. 
+parseLedGetImaxResponse: Parse ("translate") response serial format message with leds' maximum intensities 
+
+parseLedGetIcurrentRequest : Compose request to get leds' current intensities
+parseLedGetIcurrentResponse : Parse response to get leds' current intensities
+
+parseLedGetLevelRequest : Compose request to get leds' levels
+parseLedGetLevelResponse : Parse response to get leds' levels
+
+parseLedGetTemperatureRequest : Compose request to get leds' temperatures
+parseLedGetTemperatureResponse : Parse response to get leds' temperatures
+
+parseLedGetStatusRequest: Compose a request to get leds' status
+parseLedGetStatusResponse: Parse response to get leds' status
+
+parseGetVersionRequest: Compose a request to get motor board's firmware version
+parseGetVersionResponse: Parse response to get motor board's firmware version
+
+
+
+MOTOR COMMANDS: 
+
+parseMotorGetDeviceConfigRequest: Compose request to get motor configuration
+parseMotorGetDeviceConfigResponse: Parse response to get motor configuration
+
+parseMotorSetDirectionSpeedRequest: Compose request to set motors' speeds
+parseMotorSetDirectionSpeedResponse: Parse response to set motors' speeds
+
+parseMotorGetDirectionSpeedRequest: Compose request to get motors' speeds
+parseMotorGetDirectionSpeedResponse: Parse response to get motors' speeds
+
+parseMotorSetAccelRequest: Compose request to get motors' accelerations
+parseMotorSetAccelResponse: Parse response to set motors' accelerations
+
+parseMotorGetAccelRequest: Compose request to get motors' accelerations
+parseMotorGetAccelResponse: Parse response to set motors' accelerations
+
+parseMotorGetTemperatureRequest: Compose request to get motors' temperatures
+parseMotorGetTemperatureResponse: Parse response to get motors' temperatures
+
+parseMotorGetIcurrentRequest: Compose request to get current motors' intensities
+parseMotorGetIcurrentResponse: Parse response to get current motors' intensities
+
+parseMotorGetStatusRequest: Compose request to get motors' status
+parseMotorGetStatusResponse: Parse response to get motors' status
+
+
+
+MOTORCTRL COMMANDS: 
+
+
+parseMotorctrlGetConstantsRequest: Compose request to get control constants for a motor
+parseMotorctrlGetConstantsResponse: Parse response to get control constants of a motor
+
+parseMotorctrlSetConstantsRequest: Compose request to set control constants for a motor
+parseMotorctrlSetConstantsResponse: Parse response to set control constants of a motor
+
+
+
+SENSOR COMMANDS: 
+
+parseSensorGetDeviceConfigRequest: Compose request to get sensor configuration
+parseSensorGetDeviceConfigResponse: Parse response to get sensor configuration
+
+parseSensorGetOffsetRequest: Compose request to get sensor offset
+parseSensorGetOffsetResponse: Parse response to get sensor offset
+
+parseSensorSetOffsetRequest: Compose request to set sensor offset
+parseSensorSetOffsetResponse: Parse response to set sensor offset
+
+parseSensorGetValueRequest: Compose request to get sensor value
+parseSensorGetValueResponse:  Parse response to get sensor value
+
+
+## 19-07-2012: we add a new parameter: saturation_value (X). Motor speeds between -X and X will be saturated either to 0 or to X. --> the new dynamic reconfigurable parameter must be added in the cfg/MotorBoardDynParams.cfg file and in the fugu_configurations/motorboard/params.yaml . 
+
+

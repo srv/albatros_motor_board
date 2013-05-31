@@ -1,11 +1,12 @@
 # Specific files
-src/albatros_motorboard/
+src/albatros_motor_board/
 
 # Build objects
 lib/
 bin/
 build/
 docs/
+doc/
 
 # Auto generated code
 cfg/cpp/

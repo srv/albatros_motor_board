@@ -1,13 +1,11 @@
-/******************************************************************************
- * Class: SerialComm
- * Author: Joan Pau on original version from ckonvalin
- * Created: 11/13/05
- *
- * Purpose:
- 		Establish Serial communication with device.
- *****************************************************************************/
+/**
+ * @file
+ * @brief Serial port interface implementation.
+ * @author Joan Pau Beltran
+ * @note Based on original version from ckonvalin for the Memsense IMU driver.
+ */
 
-#include "serialcomm.h"
+#include "serial_comm.h"
 #include <cerrno>
 #include <cstdlib>
 #include <fcntl.h>

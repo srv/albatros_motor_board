@@ -1,9 +1,12 @@
 <launch>
-  <node pkg="albatros_motorboard" type="motorboard_node" name="motorboard_node" output="screen">
+
+  <node pkg="albatros_motor_board" type="motor_board_node" name="motor_board_node" output="screen">
 
     <param name="serial_port" value="/dev/ttyS0" type="string" />
 
-    <param name="rate" value="10.0" type="double" />
+    <param name="rate_speeds" value="10.0" type="double" />
+    <param name="rate_status" value="1.0" type="double" />
+    <param name="rate_pressure" value="10.0" type="double" />
 
     <param name="pressure_offset" value="0" type="int" />
     <param name="waterin_offset" value="0" type="int" />
@@ -37,7 +40,7 @@
     <param name="downward_right_invert" value="true" type="bool" />
 
   </node>
-  
-  <node pkg="dynamic_reconfigure" type="reconfigure_gui" output="screen" />
+
+  <node pkg="dynamic_reconfigure" type="reconfigure_gui" name="dynamic_reconfigure_node" output="screen" />
 
 </launch>

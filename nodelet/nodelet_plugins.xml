@@ -1,0 +1,9 @@
+<library path="lib/libmotor_board_nodelet">
+  <class name="albatros_motor_board/motor_board_nodelet"
+         type="albatros_motor_board::MotorBoardNodelet"
+         base_class_type="nodelet::Nodelet">
+    <description>
+      Albatros motor board nodelet.
+    </description>
+  </class>
+</library>

@@ -1,29 +1,29 @@
 /**
- * @file motorboardctrl.h
- * @brief Motor board controller class presentation
+ * @file
+ * @brief Motor board controller class presentation.
  * @author Joan Pau Beltran
  * @date 2011-01-03
  *
  * The class presented in this file provides an interface to communicate with the
  * motor board and control its modules. Currently, these modules are the motors
- * and its built in PID controllers, and two sensors (pressure and water in).
+ * and their built in PID controllers, and two sensors (pressure and water in).
  *
  * Communication with the board is done through a serial port with a set of
- * request/response commands. The SerialComm class provides the serial deals
- * with the serial communication issues.
- * Command's format and syntax is addressed by the commandmsg module.
+ * request/response commands.
+ * The SerialComm class deals with the serial communication issues.
+ * Command's format and syntax is addressed by the command_msg module.
  */
 
-#ifndef MOTORBOARDCTRL_H
-#define MOTORBOARDCTRL_H
+#ifndef MOTOR_BOARD_CTRL_H
+#define MOTOR_BOARD_CTRL_H
 
 #include <string>
 #include <stdexcept>
 #include <ostream>
-#include "serialcomm.h"
-#include "commandmsg.h"
+#include "serial_comm.h"
+#include "command_msg.h"
 
-namespace albatros_motorboard
+namespace albatros_motor_board
 {
 
 using serial::SerialComm;
@@ -71,10 +71,14 @@ public:
   //! Motor selection
   enum Motor {FORWARD_LEFT=0, FORWARD_RIGHT, DOWNWARD_LEFT, DOWNWARD_RIGHT};
   static const int NUM_MOTORS = 4;
+  static const int MAX_MOTOR_SPEED = 100;
+  static const int MIN_MOTOR_SPEED = -100;
 
   typedef int MotorSpeeds[NUM_MOTORS];
   typedef int MotorAccels[NUM_MOTORS];
   typedef int MotorStatus[NUM_MOTORS];
+
+  int saturation_value;
 
   void getSpeeds(MotorSpeeds* rpm);
   void setSpeeds(const MotorSpeeds& req_pc, MotorSpeeds* res_rpm=0);
@@ -109,19 +113,19 @@ private:
   //!@name Serial communication
   //@{
   SerialComm comm_;
-  static const SerialComm::E_DataBits commDataBits_ = SerialComm::DB8;
-  static const SerialComm::E_StopBits commStopBits_ = SerialComm::ONE_STOP_BIT;
-  static const SerialComm::E_Parity commParity_ = SerialComm::NO_PARITY;
-  static const unsigned long commBaudRate_ = 38400;
-  static const unsigned long commReadTimeout_ = 500;
+  static const SerialComm::E_DataBits COMM_DATA_BITS = SerialComm::DB8;
+  static const SerialComm::E_StopBits COMM_STOP_BITS = SerialComm::ONE_STOP_BIT;
+  static const SerialComm::E_Parity COMM_PARITY = SerialComm::NO_PARITY;
+  static const unsigned long COMM_BAUD_RATE = 38400;
+  static const unsigned long COMM_READ_TIMEOUT = 500;
+  static const unsigned long COMM_READ_RETRIES = 4;
   //@}
 };
 
-} // namespace motorboard
+std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::Motor& m);
+std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::Sensor& s);
+std::ostream& operator<<(std::ostream& ostr, const MotorBoardCtrl::PIDConstant& k);
 
-std::ostream& operator<<(std::ostream& ostr, const albatros_motorboard::MotorBoardCtrl::Motor& m);
-std::ostream& operator<<(std::ostream& ostr, const albatros_motorboard::MotorBoardCtrl::Sensor& s);
-std::ostream& operator<<(std::ostream& ostr, const albatros_motorboard::MotorBoardCtrl::PIDConstant& k);
+} // namespace
 
-#endif
-
+#endif // MOTOR_BOARD_CTRL_H
