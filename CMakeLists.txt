@@ -37,9 +37,11 @@ target_link_libraries(motor_board_console motor_board_ctrl ${catkin_LIBRARIES})
 add_executable(motor_board_node
                src/motor_board_node.cpp
                src/motor_board_node_base.cpp)
+add_dependencies(motor_board_node auv_sensor_msgs_gencpp)
 target_link_libraries(motor_board_node  motor_board_ctrl ${catkin_LIBRARIES})
 
 add_library(motor_board_nodelet
             src/motor_board_nodelet.cpp
             src/motor_board_node_base.cpp)
+add_dependencies(motor_board_nodelet auv_sensor_msgs_gencpp)
 target_link_libraries(motor_board_nodelet motor_board_ctrl ${catkin_LIBRARIES})
